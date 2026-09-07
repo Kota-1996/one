@@ -1,326 +1,2420 @@
-from pathlib import Path
-
-# A fully self-contained HTML: no external image files, no image URLs, no base64.
-# Character visuals are drawn as inline SVG inside the application itself.
-svg = {
-"naruto": '''<svg viewBox="0 0 260 320" xmlns="http://www.w3.org/2000/svg">
-<defs><linearGradient id="ng" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ff8a00"/><stop offset="1" stop-color="#ff2d92"/></linearGradient></defs>
-<circle cx="130" cy="150" r="92" fill="#f6b18e"/>
-<path d="M42 120Q48 28 78 42Q95 8 112 39Q130 3 148 38Q181 5 190 47Q219 35 217 126Q194 88 165 83Q131 68 94 84Q63 88 42 120Z" fill="#ffd800"/>
-<path d="M50 104Q130 72 210 104L204 132Q130 105 56 132Z" fill="#18234a"/>
-<rect x="80" y="91" width="100" height="42" rx="10" fill="#aeb7c8" stroke="#111" stroke-width="5"/>
-<path d="M126 101q-16 0-16 14t16 14q13 0 13-13q0-11-11-11" fill="none" stroke="#17203b" stroke-width="5"/>
-<circle cx="94" cy="155" r="14" fill="#fff"/><circle cx="166" cy="155" r="14" fill="#fff"/>
-<circle cx="94" cy="155" r="7" fill="#4c82b9"/><circle cx="166" cy="155" r="7" fill="#4c82b9"/>
-<path d="M101 201Q130 215 159 201" fill="none" stroke="#111" stroke-width="4" stroke-linecap="round"/>
-<path d="M78 179l-24 12M78 192l-25 8M182 179l24 12M182 192l25 8" stroke="#6f3e35" stroke-width="4"/>
-<path d="M62 228Q130 198 198 228L230 320H30Z" fill="#173c78"/>
-<path d="M92 230h76l-15 90H107Z" fill="#ff762e"/>
-</svg>''',
-"gojo": '''<svg viewBox="0 0 260 320" xmlns="http://www.w3.org/2000/svg">
-<defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#20d9ff"/><stop offset="1" stop-color="#8a5cf6"/></linearGradient></defs>
-<circle cx="130" cy="145" r="88" fill="#f3c2a9"/>
-<path d="M44 128Q42 42 79 56Q103 12 128 52Q151 10 182 55Q215 40 216 128Q190 92 162 83Q130 70 97 83Q66 92 44 128Z" fill="#eeeaff"/>
-<path d="M68 132Q130 104 192 132" fill="none" stroke="#121229" stroke-width="14"/>
-<path d="M84 149Q96 137 109 149M151 149Q164 137 177 149" stroke="#25bfff" stroke-width="7" fill="none"/>
-<circle cx="103" cy="151" r="8" fill="#a7f3ff"/><circle cx="165" cy="151" r="8" fill="#a7f3ff"/>
-<path d="M104 199Q130 210 156 199" fill="none" stroke="#111" stroke-width="4"/>
-<path d="M62 225Q130 195 198 225L230 320H30Z" fill="#151526"/>
-<path d="M83 226L177 226L205 320H55Z" fill="url(#gg)" opacity=".9"/>
-<text x="130" y="278" text-anchor="middle" fill="white" font-size="13" font-weight="900">LIMITLESS</text>
-</svg>''',
-"igris": '''<svg viewBox="0 0 260 320" xmlns="http://www.w3.org/2000/svg">
-<defs><linearGradient id="ig" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#071426"/><stop offset=".5" stop-color="#b40025"/><stop offset="1" stop-color="#29dfff"/></linearGradient></defs>
-<path d="M130 18L162 50L204 43L198 84L236 111L205 135L216 181L172 175L130 210L88 175L44 181L55 135L24 111L62 84L56 43L98 50Z" fill="url(#ig)" stroke="#34e8ff" stroke-width="4"/>
-<path d="M92 91L130 57L168 91L181 151L154 187H106L79 151Z" fill="#090c18" stroke="#a5efff" stroke-width="4"/>
-<path d="M99 111L121 100L113 126M161 111L139 100L147 126" stroke="#29dfff" stroke-width="7"/>
-<path d="M91 188L62 260L100 241L130 300L160 241L198 260L169 188Z" fill="#111322" stroke="#d20b36" stroke-width="5"/>
-<path d="M110 202L130 224L150 202" fill="none" stroke="#f22e55" stroke-width="6"/>
-<text x="130" y="316" text-anchor="middle" fill="#d7faff" font-size="12" font-weight="900">SHADOW KNIGHT</text>
-</svg>'''
-}
-
-products = [
-("naruto","Naruto","Hokage Oversized Tee","₹1,499","HOT"),
-("gojo","Jujutsu Kaisen","Limitless Graphic Tee","₹1,699","NEW"),
-("igris","Solo Leveling","Igris Shadow Tee","₹1,799","EPIC"),
-("naruto","Naruto","Leaf Village Cargo Pants","₹2,199","DROP"),
-("gojo","Jujutsu Kaisen","Six Eyes Hoodie","₹2,799","HOT"),
-("igris","Solo Leveling","Crimson Monarch Hoodie","₹2,899","RARE"),
-("naruto","Naruto","Ninja Energy Hoodie","₹2,499","NEW"),
-("gojo","Jujutsu Kaisen","Infinity Cargo Pants","₹2,299","LIMITED"),
-("igris","Solo Leveling","Shadow Army Cargo Pants","₹2,399","DROP"),
-]
-
-cards=[]
-for key,anime,name,price,badge in products:
-    cards.append(f'''<article class="card" data-anime="{key}">
-<div class="visual"><span class="badge">{badge}</span><button class="wish" onclick="wish(this)">♡</button>
-<div class="shirt"><div class="neck"></div><div class="art">{svg[key]}<b>{anime.upper()}</b></div><small>KOTA'S ANIME</small></div>
-<div class="front-label">CHARACTER ART • FRONT PRINT</div></div>
-<div class="info"><em>{anime}</em><h3>{name}</h3><p>Oversized Gen-Alpha fit with bold character artwork built into the garment design.</p><div class="rating">★★★★★ <span>4.9</span></div><div class="buy"><strong>{price}</strong><button onclick="add('{name}')">ADD +</button></div></div>
-</article>''')
-
-html = f'''<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>KOTA'S ANIME — Character Streetwear</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KOTA's Anime — Anime Streetwear</title>
+
 <style>
-:root{{--bg:#060611;--card:#111126;--pink:#ff2d92;--purple:#8b5cf6;--cyan:#20d9ff;--lime:#c8ff35;--yellow:#ffe45c;--muted:#aaaac0;--line:rgba(255,255,255,.1)}}
-*{{box-sizing:border-box;margin:0;padding:0}}
-html{{scroll-behavior:smooth}}
-body{{font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at 5% 0%,#2a102b,transparent 25%),radial-gradient(circle at 95% 5%,#102a38,transparent 24%),linear-gradient(#060611,#0b0b19);color:#fff;overflow-x:hidden}}
-body:before{{content:"";position:fixed;inset:0;pointer-events:none;opacity:.035;background-image:linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px);background-size:42px 42px}}
-a{{color:inherit;text-decoration:none}}button{{font:inherit;cursor:pointer;border:0}}.container{{width:min(1320px,92%);margin:auto}}
-.gradient{{background:linear-gradient(90deg,var(--pink),var(--purple),var(--cyan));background-clip:text;-webkit-background-clip:text;color:transparent}}
-header{{position:sticky;top:0;z-index:50;background:rgba(6,6,17,.82);backdrop-filter:blur(20px);border-bottom:1px solid var(--line)}}
-.header{{height:78px;display:flex;align-items:center;justify-content:space-between;gap:20px}}
-.logo{{display:flex;align-items:center;gap:10px;font-weight:1000;font-size:20px;letter-spacing:-1px}}.logo i{{font-style:normal;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--pink),var(--purple));box-shadow:0 0 35px #ff2d9244}}.logo span{{color:var(--pink)}}
-nav{{display:flex;gap:4px}}nav a{{padding:10px 13px;border-radius:12px;color:var(--muted);font-size:11px;font-weight:900}}nav a:hover,nav a.active{{background:#ffffff12;color:#fff}}
-.actions{{display:flex;gap:8px}}.icon{{width:42px;height:42px;border-radius:50%;color:#fff;background:#ffffff0c;border:1px solid var(--line)}}.icon:hover{{background:linear-gradient(135deg,var(--pink),var(--purple))}}
-.hero{{padding:22px 0 10px}}.hero-box{{min-height:640px;border:1px solid var(--line);border-radius:36px;overflow:hidden;display:flex;align-items:center;position:relative;background:radial-gradient(circle at 75% 45%,#512154 0,#19112b 22%,#080812 55%,#060611 100%);box-shadow:0 30px 90px #0008}}
-.hero-box:after{{content:"";position:absolute;width:500px;height:500px;right:-130px;top:-130px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--purple),var(--cyan));filter:blur(100px);opacity:.25}}
-.hero-content{{position:relative;z-index:2;padding:70px;max-width:790px}}.pill{{display:inline-flex;padding:9px 14px;border-radius:999px;background:#ff2d9218;border:1px solid #ff2d9250;color:#ff9aca;font-size:10px;font-weight:900;letter-spacing:1px}}
-h1{{font-size:clamp(58px,8vw,108px);line-height:.85;letter-spacing:-7px;margin:24px 0}}.hero p{{max-width:620px;color:#c3c3d2;font-size:14px;line-height:1.8;margin-bottom:28px}}.buttons{{display:flex;gap:10px;flex-wrap:wrap}}.btn{{padding:15px 20px;border-radius:14px;font-size:11px;font-weight:1000;display:inline-block}}.primary{{background:linear-gradient(100deg,var(--pink),var(--purple))}}.secondary{{background:#ffffff0b;border:1px solid var(--line)}}
-.ticker{{overflow:hidden;border-block:1px solid var(--line);background:#ffffff05}}.track{{display:flex;width:max-content;animation:ticker 22s linear infinite}}.track span{{padding:16px 28px;font-size:10px;font-weight:1000;letter-spacing:1px;white-space:nowrap}}.track b{{color:var(--pink)}}@keyframes ticker{{to{{transform:translateX(-50%)}}}}
-section{{padding:76px 0}}.head{{margin-bottom:28px}}.head h2{{font-size:38px;letter-spacing:-2px}}.head p{{color:var(--muted);font-size:12px;margin-top:7px}}
-.universes{{display:grid;grid-template-columns:repeat(6,1fr);gap:13px}}.universe{{padding:18px;border:1px solid var(--line);border-radius:22px;background:var(--card);transition:.25s;cursor:pointer}}.universe:hover{{transform:translateY(-7px);border-color:var(--pink)}}.universe .mini{{height:115px;border-radius:17px;overflow:hidden;background:#090914;margin-bottom:14px}}.mini svg{{width:100%;height:100%}}.universe h3{{font-size:13px}}.universe p{{font-size:9px;color:var(--muted);margin-top:6px}}
-.filters{{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:25px}}.filter{{padding:10px 15px;border-radius:999px;color:var(--muted);background:var(--card);border:1px solid var(--line);font-size:10px;font-weight:1000}}.filter.active,.filter:hover{{background:linear-gradient(100deg,var(--pink),var(--purple));color:#fff}}
-.products{{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}}.card{{background:var(--card);border:1px solid var(--line);border-radius:26px;overflow:hidden;transition:.3s}}.card:hover{{transform:translateY(-9px);box-shadow:0 25px 70px #0008;border-color:#8b5cf688}}.card.hide{{display:none}}
-.visual{{height:420px;position:relative;display:grid;place-items:center;background:radial-gradient(circle at 50% 35%,#29294d,#101020 68%);overflow:hidden}}.visual:before{{content:"";position:absolute;width:280px;height:280px;border-radius:50%;background:linear-gradient(135deg,var(--pink),var(--purple),var(--cyan));filter:blur(75px);opacity:.2}}
-.badge{{position:absolute;z-index:8;left:14px;top:14px;background:var(--lime);color:#111;padding:7px 10px;border-radius:999px;font-size:8px;font-weight:1000}}.wish{{position:absolute;z-index:8;right:14px;top:14px;width:39px;height:39px;border-radius:50%;background:#0009;color:#fff;border:1px solid #fff2}}
-.wish.liked{{background:linear-gradient(135deg,var(--pink),var(--purple))}}
-.shirt{{position:relative;z-index:3;width:265px;height:330px;background:linear-gradient(145deg,#292943,#08080f);clip-path:polygon(24% 5%,38% 0,50% 8%,62% 0,76% 5%,100% 22%,83% 43%,74% 29%,74% 100%,26% 100%,26% 29%,17% 43%,0 22%);filter:drop-shadow(0 30px 35px #0009)}}.shirt:after{{content:"";position:absolute;inset:5px;background:linear-gradient(145deg,#24243d,#08080f);clip-path:inherit}}
-.neck{{position:absolute;z-index:4;left:calc(50% - 30px);top:7px;width:60px;height:32px;background:#06060d;border-radius:0 0 40px 40px}}
-.art{{position:absolute;z-index:5;left:50%;top:66px;transform:translateX(-50%);width:150px;height:174px;border-radius:15px;overflow:hidden;border:2px solid #fff3;background:#090914;box-shadow:0 12px 30px #0009}}.art svg{{width:100%;height:100%}}.art b{{position:absolute;left:7px;bottom:7px;padding:4px 6px;border-radius:5px;background:#000c;font-size:7px}}
-.shirt>small{{position:absolute;z-index:6;left:50%;bottom:27px;transform:translateX(-50%);white-space:nowrap;font-size:7px;font-weight:1000;letter-spacing:1px}}.front-label{{position:absolute;z-index:7;bottom:13px;left:50%;transform:translateX(-50%);white-space:nowrap;padding:6px 9px;border-radius:999px;background:#000b;font-size:8px;font-weight:900;color:#ddd}}
-.info{{padding:19px}}.info em{{font-style:normal;color:var(--cyan);font-size:9px;font-weight:1000;text-transform:uppercase;letter-spacing:1px}}.info h3{{font-size:17px;margin:7px 0}}.info p{{color:var(--muted);font-size:10px;line-height:1.6;min-height:33px}}.rating{{color:var(--yellow);font-size:10px;margin-top:12px}}.rating span{{color:var(--muted);margin-left:5px}}.buy{{display:flex;justify-content:space-between;align-items:center;margin-top:16px}}.buy strong{{font-size:20px}}.buy button{{padding:10px 14px;border-radius:11px;background:linear-gradient(100deg,var(--purple),var(--pink));color:#fff;font-size:9px;font-weight:1000}}
-.feature{{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:32px;overflow:hidden;background:linear-gradient(135deg,#20102f,#0c1725);box-shadow:0 30px 90px #0008}}.feature-art{{min-height:470px;display:grid;place-items:center;background:radial-gradient(circle,#29294f,#080811)}}.feature-art .big{{width:320px;height:400px;filter:drop-shadow(25px 25px 45px #0008)}}.feature-copy{{padding:60px;display:flex;flex-direction:column;justify-content:center}}.feature-copy small{{color:var(--pink);font-size:9px;font-weight:1000;letter-spacing:2px}}.feature-copy h2{{font-size:48px;line-height:.95;letter-spacing:-3px;margin:15px 0}}.feature-copy p{{max-width:470px;color:var(--muted);font-size:13px;line-height:1.8;margin-bottom:25px}}
-.styles{{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}}.style{{padding:30px;min-height:210px;border:1px solid var(--line);border-radius:24px;background:var(--card);transition:.25s}}.style:hover{{transform:translateY(-7px);border-color:var(--cyan)}}.style div{{font-size:38px;margin-bottom:18px}}.style h3{{font-size:17px;margin-bottom:9px}}.style p{{color:var(--muted);font-size:11px;line-height:1.7}}
-.news{{padding:55px 25px;text-align:center;border:1px solid var(--line);border-radius:30px;background:radial-gradient(circle at 50% 0,#ff2d9230,transparent 55%),var(--card)}}.news h2{{font-size:38px;letter-spacing:-2px}}.news p{{color:var(--muted);font-size:12px;margin:9px 0 22px}}.email{{max-width:540px;margin:auto;display:flex;gap:8px}}.email input{{flex:1;padding:15px;color:#fff;background:#07070e;border:1px solid var(--line);border-radius:13px;outline:0}}.email button{{padding:15px 18px;color:#fff;background:linear-gradient(100deg,var(--pink),var(--purple));border-radius:13px;font-size:10px;font-weight:1000}}
-footer{{border-top:1px solid var(--line);padding:50px 0 25px}}.foot{{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:30px;margin-bottom:35px}}footer h4{{font-size:11px;margin-bottom:12px}}footer a,footer p{{color:var(--muted);font-size:11px;line-height:2}}.copy{{border-top:1px solid var(--line);padding-top:20px;text-align:center;color:#66667a;font-size:9px}}
-.cart{{position:fixed;right:22px;bottom:22px;z-index:100;padding:15px 19px;border-radius:999px;background:linear-gradient(100deg,var(--pink),var(--purple));font-size:10px;font-weight:1000;box-shadow:0 15px 45px #ff2d9240}}.toast{{position:fixed;z-index:200;left:50%;bottom:25px;transform:translate(-50%,130px);padding:13px 18px;background:#fff;color:#111;border-radius:999px;font-size:10px;font-weight:1000;transition:.3s}}.toast.show{{transform:translate(-50%,0)}}
-@media(max-width:1050px){{.universes{{grid-template-columns:repeat(3,1fr)}}.products{{grid-template-columns:repeat(2,1fr)}}.foot{{grid-template-columns:1fr 1fr}}}}
-@media(max-width:800px){{nav{{display:none}}.hero-content{{padding:45px}}.feature{{grid-template-columns:1fr}}.styles{{grid-template-columns:1fr}}}}
-@media(max-width:540px){{.container{{width:94%}}.header{{height:68px}}.logo{{font-size:16px}}.logo i{{width:38px;height:38px}}.icon{{width:37px;height:37px}}.hero-box{{min-height:540px;border-radius:25px}}.hero-content{{padding:28px}}h1{{font-size:50px;letter-spacing:-4px}}.hero p{{font-size:12px}}section{{padding:55px 0}}.head h2{{font-size:29px}}.universes{{grid-template-columns:repeat(2,1fr)}}.products{{grid-template-columns:1fr}}.feature-copy{{padding:32px}}.feature-copy h2{{font-size:38px}}.email{{flex-direction:column}}.foot{{grid-template-columns:1fr}}}}
+
+/* =========================================================
+   KOTA'S ANIME - GLOBAL STYLES
+   ========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #080812;
+    --card: #11111f;
+    --card2: #17172a;
+    --text: #ffffff;
+    --muted: #9d9db3;
+    --purple: #8b5cf6;
+    --pink: #ec4899;
+    --blue: #38bdf8;
+    --cyan: #22d3ee;
+    --green: #22c55e;
+    --orange: #fb923c;
+    --red: #ef4444;
+    --yellow: #facc15;
+    --border: rgba(255,255,255,0.09);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background:
+        radial-gradient(circle at 10% 10%, rgba(139,92,246,.18), transparent 25%),
+        radial-gradient(circle at 90% 20%, rgba(236,72,153,.12), transparent 25%),
+        radial-gradient(circle at 50% 100%, rgba(34,211,238,.08), transparent 30%),
+        var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+button,
+input {
+    font-family: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #080812;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(var(--purple), var(--pink));
+    border-radius: 20px;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    height: 76px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5%;
+    background: rgba(8,8,18,.82);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 23px;
+    font-weight: 900;
+    letter-spacing: -1px;
+}
+
+.logo-icon {
+    width: 43px;
+    height: 43px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    font-size: 25px;
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    box-shadow: 0 0 25px rgba(139,92,246,.45);
+}
+
+.logo span {
+    background: linear-gradient(90deg,#fff,var(--pink),var(--cyan));
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+.nav a {
+    color: #c9c9d9;
+    font-size: 14px;
+    font-weight: 700;
+    transition: .25s;
+}
+
+.nav a:hover {
+    color: white;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.icon-btn {
+    position: relative;
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.05);
+    color: white;
+    font-size: 18px;
+    transition: .25s;
+}
+
+.icon-btn:hover {
+    transform: translateY(-2px);
+    background: rgba(139,92,246,.25);
+    border-color: var(--purple);
+}
+
+.badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 20px;
+    background: var(--pink);
+    font-size: 10px;
+    display: grid;
+    place-items: center;
+    font-weight: 900;
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.hero {
+    width: 90%;
+    max-width: 1400px;
+    margin: 30px auto 0;
+    min-height: 540px;
+    border: 1px solid var(--border);
+    border-radius: 35px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 65px;
+    background:
+        linear-gradient(90deg,rgba(7,7,17,.98) 0%,rgba(8,8,18,.8) 48%,rgba(8,8,18,.25)),
+        url("https://images.unsplash.com/photo-1541560052-77ec1bbc09f7?auto=format&fit=crop&w=1800&q=90")
+        center/cover;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: var(--purple);
+    filter: blur(120px);
+    opacity: .3;
+    right: 15%;
+    top: 20%;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 650px;
+}
+
+.hero-tag {
+    display: inline-flex;
+    padding: 8px 15px;
+    border: 1px solid rgba(236,72,153,.4);
+    border-radius: 30px;
+    background: rgba(236,72,153,.1);
+    color: #f9a8d4;
+    font-size: 12px;
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+.hero h1 {
+    font-size: clamp(45px,7vw,86px);
+    line-height: .94;
+    letter-spacing: -5px;
+    margin-bottom: 24px;
+}
+
+.hero h1 span {
+    background: linear-gradient(90deg,var(--purple),var(--pink),var(--orange));
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.hero p {
+    color: #b7b7c9;
+    font-size: 17px;
+    line-height: 1.7;
+    max-width: 560px;
+    margin-bottom: 30px;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.primary-btn,
+.secondary-btn {
+    padding: 15px 24px;
+    border-radius: 15px;
+    border: none;
+    font-weight: 900;
+    transition: .25s;
+}
+
+.primary-btn {
+    color: white;
+    background: linear-gradient(135deg,var(--purple),var(--pink));
+    box-shadow: 0 10px 30px rgba(139,92,246,.3);
+}
+
+.primary-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(236,72,153,.35);
+}
+
+.secondary-btn {
+    color: white;
+    background: rgba(255,255,255,.08);
+    border: 1px solid var(--border);
+}
+
+.secondary-btn:hover {
+    background: rgba(255,255,255,.13);
+}
+
+/* =========================================================
+   SECTION
+   ========================================================= */
+
+.section {
+    width: 90%;
+    max-width: 1400px;
+    margin: 75px auto;
+}
+
+.section-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.section-head h2 {
+    font-size: 32px;
+    letter-spacing: -1.5px;
+}
+
+.section-head p {
+    color: var(--muted);
+    margin-top: 6px;
+    font-size: 14px;
+}
+
+/* =========================================================
+   CATEGORIES
+   ========================================================= */
+
+.categories {
+    display: grid;
+    grid-template-columns: repeat(6,1fr);
+    gap: 13px;
+}
+
+.category {
+    min-height: 105px;
+    padding: 20px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: linear-gradient(145deg,#141424,#0e0e1a);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 9px;
+    transition: .25s;
+}
+
+.category:hover {
+    transform: translateY(-5px);
+    border-color: rgba(139,92,246,.5);
+    box-shadow: 0 15px 40px rgba(0,0,0,.25);
+}
+
+.category-icon {
+    font-size: 29px;
+}
+
+.category span {
+    font-size: 12px;
+    color: #c5c5d2;
+    font-weight: 800;
+}
+
+/* =========================================================
+   FILTER BAR
+   ========================================================= */
+
+.shop-tools {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.filter {
+    border: 1px solid var(--border);
+    color: #c7c7d3;
+    background: rgba(255,255,255,.04);
+    padding: 10px 15px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.filter.active,
+.filter:hover {
+    color: white;
+    background: linear-gradient(135deg,var(--purple),#6d28d9);
+    border-color: transparent;
+}
+
+.search {
+    width: 250px;
+    position: relative;
+}
+
+.search input {
+    width: 100%;
+    padding: 12px 16px 12px 40px;
+    border-radius: 13px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.05);
+    color: white;
+    outline: none;
+}
+
+.search input:focus {
+    border-color: var(--purple);
+}
+
+.search-icon {
+    position: absolute;
+    left: 14px;
+    top: 11px;
+}
+
+/* =========================================================
+   PRODUCT GRID
+   ========================================================= */
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 20px;
+}
+
+.product {
+    background: linear-gradient(145deg,#151525,#0e0e18);
+    border: 1px solid var(--border);
+    border-radius: 23px;
+    overflow: hidden;
+    transition: .3s;
+    position: relative;
+}
+
+.product:hover {
+    transform: translateY(-8px);
+    border-color: rgba(139,92,246,.5);
+    box-shadow: 0 25px 60px rgba(0,0,0,.4);
+}
+
+.product-image {
+    height: 310px;
+    position: relative;
+    overflow: hidden;
+    background: #191927;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: .5s;
+}
+
+.product:hover .product-image img {
+    transform: scale(1.07);
+}
+
+.discount {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: var(--red);
+    color: white;
+    padding: 7px 9px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.wishlist {
+    position: absolute;
+    top: 13px;
+    right: 13px;
+    width: 38px;
+    height: 38px;
+    border: 1px solid rgba(255,255,255,.15);
+    background: rgba(0,0,0,.45);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    color: white;
+    font-size: 17px;
+}
+
+.wishlist:hover {
+    color: #fb7185;
+}
+
+.product-info {
+    padding: 18px;
+}
+
+.product-anime {
+    font-size: 10px;
+    color: var(--pink);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 7px;
+}
+
+.product-title {
+    font-size: 16px;
+    font-weight: 900;
+    margin-bottom: 9px;
+}
+
+.rating {
+    font-size: 12px;
+    color: var(--yellow);
+    margin-bottom: 13px;
+}
+
+.price-row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 15px;
+}
+
+.price {
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.old-price {
+    font-size: 12px;
+    color: #77778a;
+    text-decoration: line-through;
+}
+
+.add-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(139,92,246,.4);
+    background: rgba(139,92,246,.12);
+    color: white;
+    font-weight: 900;
+    transition: .2s;
+}
+
+.add-btn:hover {
+    background: linear-gradient(135deg,var(--purple),var(--pink));
+}
+
+/* =========================================================
+   FEATURE BANNER
+   ========================================================= */
+
+.feature-banner {
+    min-height: 300px;
+    border-radius: 30px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 50px;
+    background:
+        linear-gradient(90deg,rgba(8,8,18,.97),rgba(8,8,18,.55)),
+        url("https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=1600&q=90")
+        center/cover;
+}
+
+.feature-banner h2 {
+    font-size: 42px;
+    max-width: 580px;
+    margin-bottom: 12px;
+}
+
+.feature-banner p {
+    color: #b8b8c8;
+    max-width: 500px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* =========================================================
+   ANIME COLLECTION
+   ========================================================= */
+
+.anime-grid {
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    gap: 15px;
+}
+
+.anime-card {
+    height: 260px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 22px;
+    border: 1px solid var(--border);
+}
+
+.anime-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: .5s;
+}
+
+.anime-card:hover img {
+    transform: scale(1.1);
+}
+
+.anime-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    padding: 20px;
+    background: linear-gradient(transparent,rgba(0,0,0,.9));
+}
+
+.anime-overlay h3 {
+    font-size: 18px;
+}
+
+.anime-overlay span {
+    color: #c8c8d0;
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+/* =========================================================
+   PROMO
+   ========================================================= */
+
+.promo {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.promo-card {
+    padding: 35px;
+    min-height: 210px;
+    border-radius: 25px;
+    border: 1px solid var(--border);
+    background: linear-gradient(135deg,#171329,#12121e);
+    position: relative;
+    overflow: hidden;
+}
+
+.promo-card:nth-child(2) {
+    background: linear-gradient(135deg,#151c2b,#12121e);
+}
+
+.promo-card::after {
+    content: "✦";
+    position: absolute;
+    right: 35px;
+    top: 20px;
+    font-size: 100px;
+    color: rgba(255,255,255,.04);
+}
+
+.promo-card h3 {
+    font-size: 26px;
+    margin-bottom: 10px;
+}
+
+.promo-card p {
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 450px;
+}
+
+/* =========================================================
+   PROFILE
+   ========================================================= */
+
+.profile-section {
+    display: none;
+}
+
+.profile-card {
+    border: 1px solid var(--border);
+    background: linear-gradient(145deg,#161627,#0e0e18);
+    border-radius: 28px;
+    padding: 35px;
+}
+
+.profile-top {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid var(--border);
+}
+
+.avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 25px;
+    display: grid;
+    place-items: center;
+    font-size: 36px;
+    background: linear-gradient(135deg,var(--purple),var(--pink));
+}
+
+.profile-name {
+    font-size: 24px;
+    font-weight: 900;
+}
+
+.profile-email {
+    color: var(--muted);
+    margin-top: 5px;
+    font-size: 13px;
+}
+
+.profile-stats {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.stat {
+    padding: 20px;
+    border-radius: 17px;
+    background: rgba(255,255,255,.04);
+}
+
+.stat strong {
+    display: block;
+    font-size: 25px;
+}
+
+.stat span {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+/* =========================================================
+   CART
+   ========================================================= */
+
+.cart-panel {
+    position: fixed;
+    top: 0;
+    right: -430px;
+    width: 410px;
+    height: 100vh;
+    z-index: 2000;
+    background: #10101c;
+    border-left: 1px solid var(--border);
+    box-shadow: -20px 0 70px rgba(0,0,0,.5);
+    transition: .35s;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+}
+
+.cart-panel.open {
+    right: 0;
+}
+
+.cart-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.cart-head h2 {
+    font-size: 24px;
+}
+
+.close-btn {
+    border: 0;
+    background: rgba(255,255,255,.07);
+    color: white;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+}
+
+.cart-items {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.cart-item {
+    display: flex;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.cart-item img {
+    width: 65px;
+    height: 75px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+.cart-item-info {
+    flex: 1;
+}
+
+.cart-item-info strong {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.cart-item-info span {
+    font-size: 13px;
+    color: var(--purple);
+    font-weight: 900;
+}
+
+.remove {
+    border: 0;
+    background: transparent;
+    color: #777;
+}
+
+.cart-total {
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.total-row strong {
+    font-size: 23px;
+}
+
+/* =========================================================
+   MODAL
+   ========================================================= */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: none;
+    place-items: center;
+    background: rgba(0,0,0,.72);
+    backdrop-filter: blur(10px);
+    padding: 20px;
+}
+
+.modal.open {
+    display: grid;
+}
+
+.modal-box {
+    width: 900px;
+    max-width: 100%;
+    max-height: 90vh;
+    overflow: auto;
+    border-radius: 28px;
+    background: #11111e;
+    border: 1px solid var(--border);
+    padding: 25px;
+}
+
+.modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.modal-grid img {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    border-radius: 20px;
+}
+
+.modal-details {
+    padding: 20px 5px;
+}
+
+.modal-details h2 {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.modal-details p {
+    color: var(--muted);
+    line-height: 1.7;
+    margin: 20px 0;
+}
+
+.sizes {
+    display: flex;
+    gap: 8px;
+    margin: 20px 0;
+}
+
+.size {
+    width: 45px;
+    height: 42px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: rgba(255,255,255,.04);
+    color: white;
+}
+
+.size:hover {
+    border-color: var(--purple);
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+
+.footer {
+    margin-top: 100px;
+    padding: 55px 5%;
+    border-top: 1px solid var(--border);
+    background: #07070e;
+}
+
+.footer-grid {
+    max-width: 1400px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 50px;
+}
+
+.footer h3 {
+    margin-bottom: 17px;
+}
+
+.footer p,
+.footer a {
+    color: #858598;
+    font-size: 13px;
+    line-height: 2;
+}
+
+.footer a {
+    display: block;
+}
+
+.footer-bottom {
+    max-width: 1400px;
+    margin: 40px auto 0;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    color: #656577;
+    font-size: 12px;
+}
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+.toast {
+    position: fixed;
+    bottom: 25px;
+    left: 50%;
+    transform: translate(-50%,100px);
+    background: #181827;
+    border: 1px solid var(--border);
+    padding: 14px 20px;
+    border-radius: 14px;
+    box-shadow: 0 15px 40px rgba(0,0,0,.4);
+    z-index: 5000;
+    transition: .3s;
+    font-size: 13px;
+}
+
+.toast.show {
+    transform: translate(-50%,0);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media(max-width:1100px) {
+
+    .product-grid {
+        grid-template-columns: repeat(3,1fr);
+    }
+
+    .categories {
+        grid-template-columns: repeat(3,1fr);
+    }
+
+    .anime-grid {
+        grid-template-columns: repeat(3,1fr);
+    }
+
+    .nav {
+        display: none;
+    }
+}
+
+@media(max-width:750px) {
+
+    .header {
+        padding: 0 20px;
+    }
+
+    .logo {
+        font-size: 18px;
+    }
+
+    .hero {
+        width: 94%;
+        padding: 35px 25px;
+        min-height: 520px;
+        border-radius: 25px;
+    }
+
+    .hero h1 {
+        letter-spacing: -3px;
+    }
+
+    .section {
+        width: 94%;
+        margin: 55px auto;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(2,1fr);
+        gap: 12px;
+    }
+
+    .product-image {
+        height: 230px;
+    }
+
+    .anime-grid {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .promo {
+        grid-template-columns: 1fr;
+    }
+
+    .feature-banner {
+        padding: 30px;
+    }
+
+    .feature-banner h2 {
+        font-size: 30px;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .cart-panel {
+        width: 100%;
+        right: -100%;
+    }
+
+    .modal-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-grid img {
+        height: 350px;
+    }
+}
+
+@media(max-width:480px) {
+
+    .product-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .product-image {
+        height: 200px;
+    }
+
+    .categories {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .anime-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .search {
+        width: 100%;
+    }
+
+    .shop-tools {
+        align-items: stretch;
+    }
+
+    .footer-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 </style>
 </head>
 
 <body>
 
-<header>
-<div class="container header">
-<a class="logo" href="#home"><i>✦</i><div>KOTA'S <span>ANIME</span></div></a>
-<nav>
-<a class="active" href="#home">HOME</a>
-<a href="#universes">ANIME</a>
-<a href="#shop">SHOP</a>
-<a href="#featured">FEATURED</a>
-<a href="#styles">STYLES</a>
-</nav>
-<div class="actions">
-<button class="icon" onclick="search()">⌕</button>
-<button class="icon" onclick="showToast('Wishlist ready ♡')">♡</button>
-<button class="icon" onclick="menu()">☰</button>
-</div>
-</div>
+<!-- =======================================================
+     HEADER
+     ======================================================= -->
+
+<header class="header">
+
+    <div class="logo">
+        <div class="logo-icon">⚡</div>
+        <span>KOTA's Anime</span>
+    </div>
+
+    <nav class="nav">
+        <a href="#home">Home</a>
+        <a href="#shop">Shop</a>
+        <a href="#anime">Anime</a>
+        <a href="#offers">Offers</a>
+        <a href="#profile" onclick="showProfile()">Profile</a>
+    </nav>
+
+    <div class="header-actions">
+
+        <button class="icon-btn" onclick="showProfile()" title="Profile">
+            👤
+        </button>
+
+        <button class="icon-btn" onclick="openCart()" title="Cart">
+            🛒
+            <span class="badge" id="cartCount">0</span>
+        </button>
+
+    </div>
+
 </header>
 
-<main id="home">
 
-<section class="hero">
-<div class="container">
-<div class="hero-box">
-<div class="hero-content">
-<div class="pill">⚡ KOTA'S ANIME • NEXT-GEN STREETWEAR</div>
-<h1>WEAR YOUR<br><span class="gradient">UNIVERSE.</span></h1>
-<p>Character-first anime fashion for the new generation. Oversized tees, hoodies and cargo fits with the character artwork built directly into every product visual.</p>
-<div class="buttons">
-<a class="btn primary" href="#shop">SHOP CHARACTER DROPS →</a>
-<a class="btn secondary" href="#universes">EXPLORE ANIME ✦</a>
-</div>
-</div>
-</div>
-</div>
+<!-- =======================================================
+     HERO
+     ======================================================= -->
+
+<section class="hero" id="home">
+
+    <div class="hero-content">
+
+        <div class="hero-tag">
+            ✦ NEW GENERATION ANIME STREETWEAR
+        </div>
+
+        <h1>
+            WEAR YOUR<br>
+            <span>ANIME SOUL.</span>
+        </h1>
+
+        <p>
+            Premium anime-inspired streetwear for the generation
+            that grew up with legendary characters, impossible
+            battles and unforgettable stories.
+        </p>
+
+        <div class="hero-buttons">
+            <button class="primary-btn" onclick="scrollToShop()">
+                Explore Collection →
+            </button>
+
+            <button class="secondary-btn" onclick="showToast('🔥 30% OFF selected anime drops!')">
+                View Offers
+            </button>
+        </div>
+
+    </div>
+
 </section>
 
-<div class="ticker"><div class="track">
-<span>🍥 NARUTO <b>DROP</b></span><span>👁 GOJO <b>LIMITLESS</b></span><span>⚔️ IGRIS <b>SHADOW MODE</b></span><span>⚡ GEN ALPHA <b>STREETWEAR</b></span><span>🔥 OVERSIZED <b>FITS</b></span>
-<span>🍥 NARUTO <b>DROP</b></span><span>👁 GOJO <b>LIMITLESS</b></span><span>⚔️ IGRIS <b>SHADOW MODE</b></span><span>⚡ GEN ALPHA <b>STREETWEAR</b></span><span>🔥 OVERSIZED <b>FITS</b></span>
-</div></div>
 
-<section id="universes">
-<div class="container">
-<div class="head"><h2>CHOOSE YOUR <span class="gradient">UNIVERSE.</span></h2><p>Every visual below is drawn inside this HTML — there are no separate image files.</p></div>
-<div class="universes">
-<div class="universe" onclick="filterProducts('naruto')"><div class="mini">{svg['naruto']}</div><h3>Naruto</h3><p>NINJA ENERGY →</p></div>
-<div class="universe" onclick="filterProducts('gojo')"><div class="mini">{svg['gojo']}</div><h3>Jujutsu Kaisen</h3><p>LIMITLESS →</p></div>
-<div class="universe" onclick="filterProducts('igris')"><div class="mini">{svg['igris']}</div><h3>Solo Leveling</h3><p>SHADOW MODE →</p></div>
-<div class="universe" onclick="showToast('Death Note collection coming soon')"><div class="mini">{svg['igris']}</div><h3>Death Note</h3><p>DARK MODE →</p></div>
-<div class="universe" onclick="showToast('Attack on Titan collection coming soon')"><div class="mini">{svg['naruto']}</div><h3>Attack on Titan</h3><p>SCOUT MODE →</p></div>
-<div class="universe" onclick="showToast('Haikyuu collection coming soon')"><div class="mini">{svg['gojo']}</div><h3>Haikyuu!!</h3><p>COURT ENERGY →</p></div>
-</div>
-</div>
+<!-- =======================================================
+     CATEGORIES
+     ======================================================= -->
+
+<section class="section">
+
+    <div class="section-head">
+        <div>
+            <h2>Shop Your Style</h2>
+            <p>Choose your battle outfit.</p>
+        </div>
+    </div>
+
+    <div class="categories">
+
+        <div class="category" onclick="filterProducts('T-Shirt')">
+            <div class="category-icon">👕</div>
+            <span>T-Shirts</span>
+        </div>
+
+        <div class="category" onclick="filterProducts('Hoodie')">
+            <div class="category-icon">🧥</div>
+            <span>Hoodies</span>
+        </div>
+
+        <div class="category" onclick="filterProducts('Oversized')">
+            <div class="category-icon">🔥</div>
+            <span>Oversized</span>
+        </div>
+
+        <div class="category" onclick="filterProducts('Jacket')">
+            <div class="category-icon">🥋</div>
+            <span>Jackets</span>
+        </div>
+
+        <div class="category" onclick="showToast('👟 Sneakers collection coming soon!')">
+            <div class="category-icon">👟</div>
+            <span>Sneakers</span>
+        </div>
+
+        <div class="category" onclick="showToast('🎒 Accessories collection coming soon!')">
+            <div class="category-icon">🎒</div>
+            <span>Accessories</span>
+        </div>
+
+    </div>
+
 </section>
 
-<section id="shop">
-<div class="container">
-<div class="head"><h2>CHARACTER <span class="gradient">DROPS.</span></h2><p>Look closely: the character artwork is actually printed inside each clothing mockup.</p></div>
-<div class="filters">
-<button class="filter active" onclick="filterProducts('all',this)">ALL</button>
-<button class="filter" onclick="filterProducts('naruto',this)">NARUTO</button>
-<button class="filter" onclick="filterProducts('gojo',this)">GOJO</button>
-<button class="filter" onclick="filterProducts('igris',this)">IGRIS</button>
-</div>
-<div class="products">
-{''.join(cards)}
-</div>
-</div>
+
+<!-- =======================================================
+     SHOP
+     ======================================================= -->
+
+<section class="section" id="shop">
+
+    <div class="section-head">
+
+        <div>
+            <h2>🔥 Trending Drops</h2>
+            <p>Most wanted anime fits right now.</p>
+        </div>
+
+    </div>
+
+    <div class="shop-tools">
+
+        <div class="filters">
+
+            <button class="filter active" onclick="filterProducts('All')">
+                All
+            </button>
+
+            <button class="filter" onclick="filterProducts('Naruto')">
+                Naruto
+            </button>
+
+            <button class="filter" onclick="filterProducts('JJK')">
+                Jujutsu Kaisen
+            </button>
+
+            <button class="filter" onclick="filterProducts('One Piece')">
+                One Piece
+            </button>
+
+            <button class="filter" onclick="filterProducts('Demon Slayer')">
+                Demon Slayer
+            </button>
+
+        </div>
+
+        <div class="search">
+            <span class="search-icon">🔍</span>
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search anime or product..."
+                oninput="searchProducts()"
+            >
+        </div>
+
+    </div>
+
+
+    <div class="product-grid" id="productGrid"></div>
+
 </section>
 
-<section id="featured">
-<div class="container">
-<div class="feature">
-<div class="feature-art"><div class="big">{svg['gojo']}</div></div>
-<div class="feature-copy">
-<small>KOTA'S CHARACTER PRINT SERIES</small>
-<h2>THE CHARACTER<br><span class="gradient">IS THE FIT.</span></h2>
-<p>No broken image links. No separate downloads. The artwork in this version is inline SVG code stored directly in the HTML application.</p>
-<a class="btn primary" href="#shop">VIEW CHARACTER TEES →</a>
-</div>
-</div>
-</div>
+
+<!-- =======================================================
+     FEATURE BANNER
+     ======================================================= -->
+
+<section class="section">
+
+    <div class="feature-banner">
+
+        <div>
+
+            <h2>
+                UNLEASH YOUR
+                <span style="color:#c084fc;">INNER HERO.</span>
+            </h2>
+
+            <p>
+                Limited anime drops. Premium fabrics.
+                Designs inspired by the characters that defined
+                an entire generation.
+            </p>
+
+            <button class="primary-btn"
+                    onclick="showToast('⚡ Limited collection unlocked!')">
+                Shop Limited Drop
+            </button>
+
+        </div>
+
+    </div>
+
 </section>
 
-<section id="styles">
-<div class="container">
-<div class="head"><h2>BUILD YOUR <span class="gradient">FIT.</span></h2><p>Gen-Alpha silhouettes for anime fans.</p></div>
-<div class="styles">
-<div class="style"><div>👕</div><h3>OVERSIZED TEES</h3><p>Large character prints, relaxed cuts and bold front graphics designed as the centerpiece of the outfit.</p></div>
-<div class="style"><div>👖</div><h3>CARGO PANTS</h3><p>Wide utility silhouettes with anime-inspired patches, symbols and oversized streetwear proportions.</p></div>
-<div class="style"><div>🧥</div><h3>HOODIES + JACKETS</h3><p>Heavy layers with high-energy graphics and dark futuristic styling.</p></div>
-</div>
-</div>
+
+<!-- =======================================================
+     ANIME COLLECTION
+     ======================================================= -->
+
+<section class="section" id="anime">
+
+    <div class="section-head">
+
+        <div>
+            <h2>⚔️ Anime Universe</h2>
+            <p>Pick your world. Pick your character.</p>
+        </div>
+
+    </div>
+
+    <div class="anime-grid">
+
+        <div class="anime-card">
+            <img src="https://cdn.myanimelist.net/images/characters/9/131317.jpg"
+                 alt="Naruto">
+            <div class="anime-overlay">
+                <h3>Naruto</h3>
+                <span>Believe it!</span>
+            </div>
+        </div>
+
+        <div class="anime-card">
+            <img src="https://cdn.myanimelist.net/images/characters/11/536977.jpg"
+                 alt="Gojo">
+            <div class="anime-overlay">
+                <h3>Jujutsu Kaisen</h3>
+                <span>Unlimited Void</span>
+            </div>
+        </div>
+
+        <div class="anime-card">
+            <img src="https://cdn.myanimelist.net/images/characters/9/310307.jpg"
+                 alt="Luffy">
+            <div class="anime-overlay">
+                <h3>One Piece</h3>
+                <span>King of the Pirates</span>
+            </div>
+        </div>
+
+        <div class="anime-card">
+            <img src="https://cdn.myanimelist.net/images/characters/10/503869.jpg"
+                 alt="Tanjiro">
+            <div class="anime-overlay">
+                <h3>Demon Slayer</h3>
+                <span>Hinokami Kagura</span>
+            </div>
+        </div>
+
+        <div class="anime-card">
+            <img src="https://cdn.myanimelist.net/images/characters/12/553471.jpg"
+                 alt="Goku">
+            <div class="anime-overlay">
+                <h3>Dragon Ball</h3>
+                <span>Ultra Instinct</span>
+            </div>
+        </div>
+
+    </div>
+
 </section>
 
-<section>
-<div class="container">
-<div class="news">
-<h2>JOIN THE <span class="gradient">DROP LIST.</span></h2>
-<p>New characters. New fits. Zero boring outfits.</p>
-<div class="email"><input id="email" placeholder="your@email.com"><button onclick="subscribe()">JOIN NOW ✦</button></div>
-</div>
-</div>
+
+<!-- =======================================================
+     PROMO CARDS
+     ======================================================= -->
+
+<section class="section" id="offers">
+
+    <div class="promo">
+
+        <div class="promo-card">
+
+            <h3>⚡ First Order</h3>
+
+            <p>
+                New to KOTA's Anime?
+                Get an instant 15% discount on your first
+                anime streetwear order.
+            </p>
+
+            <br>
+
+            <button class="primary-btn"
+                    onclick="showToast('🎁 Code KOTA15 copied!')">
+                Use KOTA15
+            </button>
+
+        </div>
+
+
+        <div class="promo-card">
+
+            <h3>🌙 Night Drop</h3>
+
+            <p>
+                Exclusive midnight releases with limited stock.
+                Once they're gone, they're gone.
+            </p>
+
+            <br>
+
+            <button class="secondary-btn"
+                    onclick="showToast('🌙 Night Drop launches at 12:00 AM')">
+                Notify Me
+            </button>
+
+        </div>
+
+    </div>
+
 </section>
 
-</main>
 
-<footer>
-<div class="container">
-<div class="foot">
-<div><a class="logo" href="#home"><i>✦</i><div>KOTA'S <span>ANIME</span></div></a><p style="margin-top:14px;max-width:320px">Self-contained anime streetwear demo. All character visuals in this file are inline SVG artwork, so there are no missing image files.</p></div>
-<div><h4>SHOP</h4><a href="#shop">Character Tees</a><br><a href="#styles">Cargo Pants</a><br><a href="#styles">Hoodies</a></div>
-<div><h4>ANIME</h4><a href="#universes">Naruto</a><br><a href="#universes">Jujutsu Kaisen</a><br><a href="#universes">Solo Leveling</a></div>
-<div><h4>SUPPORT</h4><a href="#">Size Guide</a><br><a href="#">Shipping</a><br><a href="#">Returns</a></div>
+<!-- =======================================================
+     PROFILE
+     ======================================================= -->
+
+<section class="section profile-section" id="profile">
+
+    <div class="section-head">
+        <div>
+            <h2>👤 My Profile</h2>
+            <p>Your anime shopping identity.</p>
+        </div>
+    </div>
+
+    <div class="profile-card">
+
+        <div class="profile-top">
+
+            <div class="avatar">
+                🥷
+            </div>
+
+            <div>
+                <div class="profile-name">
+                    KOTA SAI KUMAR
+                </div>
+
+                <div class="profile-email">
+                    animewarrior@example.com
+                </div>
+            </div>
+
+        </div>
+
+        <div class="profile-stats">
+
+            <div class="stat">
+                <strong>12</strong>
+                <span>Orders</span>
+            </div>
+
+            <div class="stat">
+                <strong>08</strong>
+                <span>Wishlist</span>
+            </div>
+
+            <div class="stat">
+                <strong>450</strong>
+                <span>Anime Points</span>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =======================================================
+     CART
+     ======================================================= -->
+
+<aside class="cart-panel" id="cartPanel">
+
+    <div class="cart-head">
+
+        <h2>🛒 Your Cart</h2>
+
+        <button class="close-btn" onclick="closeCart()">
+            ✕
+        </button>
+
+    </div>
+
+    <div class="cart-items" id="cartItems">
+
+        <div style="color:#777;text-align:center;padding:50px 10px;">
+            Your cart is empty.
+        </div>
+
+    </div>
+
+    <div class="cart-total">
+
+        <div class="total-row">
+            <span>Total</span>
+            <strong id="cartTotal">₹0</strong>
+        </div>
+
+        <button class="primary-btn"
+                style="width:100%;"
+                onclick="checkout()">
+            Checkout →
+        </button>
+
+    </div>
+
+</aside>
+
+
+<!-- =======================================================
+     PRODUCT MODAL
+     ======================================================= -->
+
+<div class="modal" id="productModal">
+
+    <div class="modal-box">
+
+        <button
+            class="close-btn"
+            style="float:right;"
+            onclick="closeModal()">
+            ✕
+        </button>
+
+        <div class="modal-grid">
+
+            <img id="modalImage" src="" alt="Product">
+
+            <div class="modal-details">
+
+                <div class="product-anime" id="modalAnime">
+                    ANIME
+                </div>
+
+                <h2 id="modalTitle">
+                    Product
+                </h2>
+
+                <div class="rating">
+                    ★★★★★ 4.9
+                </div>
+
+                <div class="price-row">
+
+                    <span class="price" id="modalPrice">
+                        ₹999
+                    </span>
+
+                    <span class="old-price" id="modalOldPrice">
+                        ₹1499
+                    </span>
+
+                </div>
+
+                <p id="modalDescription">
+                    Premium anime-inspired streetwear.
+                </p>
+
+                <strong>
+                    Select Size
+                </strong>
+
+                <div class="sizes">
+
+                    <button class="size">S</button>
+                    <button class="size">M</button>
+                    <button class="size">L</button>
+                    <button class="size">XL</button>
+                    <button class="size">XXL</button>
+
+                </div>
+
+                <button
+                    class="primary-btn"
+                    style="width:100%;"
+                    id="modalAdd">
+                    Add To Cart
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
-<div class="copy">© 2026 KOTA'S ANIME • DEMO STORE • Use licensed character artwork for commercial products.</div>
-</div>
+
+
+<!-- =======================================================
+     FOOTER
+     ======================================================= -->
+
+<footer class="footer">
+
+    <div class="footer-grid">
+
+        <div>
+
+            <div class="logo">
+                <div class="logo-icon">⚡</div>
+                <span>KOTA's Anime</span>
+            </div>
+
+            <br>
+
+            <p>
+                Anime fashion for everyone.
+                Built for dreamers, fighters and fans
+                who never stopped believing.
+            </p>
+
+        </div>
+
+        <div>
+
+            <h3>Shop</h3>
+
+            <a href="#shop">T-Shirts</a>
+            <a href="#shop">Hoodies</a>
+            <a href="#shop">Oversized</a>
+            <a href="#shop">Limited Drops</a>
+
+        </div>
+
+        <div>
+
+            <h3>Help</h3>
+
+            <a href="#">Shipping</a>
+            <a href="#">Returns</a>
+            <a href="#">Size Guide</a>
+            <a href="#">Contact</a>
+
+        </div>
+
+        <div>
+
+            <h3>Follow</h3>
+
+            <a href="#">Instagram</a>
+            <a href="#">YouTube</a>
+            <a href="#">X / Twitter</a>
+            <a href="#">Discord</a>
+
+        </div>
+
+    </div>
+
+    <div class="footer-bottom">
+        © 2026 KOTA's Anime. Anime-inspired fashion universe.
+    </div>
+
 </footer>
 
-<div class="cart">🛒 CART <span id="count">0</span></div>
-<div class="toast" id="toast"></div>
+
+<!-- =======================================================
+     TOAST
+     ======================================================= -->
+
+<div class="toast" id="toast">
+    Added to cart!
+</div>
+
 
 <script>
-let cartCount=0;
 
-function add(name){{
-    cartCount++;
-    document.getElementById("count").textContent=cartCount;
-    showToast(name+" added to cart ✦");
-}}
+/* =========================================================
+   PRODUCT DATA
+   ========================================================= */
 
-function wish(btn){{
-    btn.classList.toggle("liked");
-    btn.textContent=btn.classList.contains("liked")?"♥":"♡";
-}}
+const products = [
 
-function showToast(message){{
-    const toast=document.getElementById("toast");
-    toast.textContent=message;
+    {
+        id: 1,
+        anime: "Naruto",
+        category: "T-Shirt",
+        title: "Hidden Leaf Oversized Tee",
+        price: 899,
+        oldPrice: 1499,
+        discount: 40,
+        rating: 4.9,
+        image: "https://cdn.myanimelist.net/images/characters/9/131317.jpg",
+        description:
+        "Premium oversized streetwear inspired by the Hidden Leaf shinobi. Heavy cotton feel with a bold anime graphic."
+    },
+
+    {
+        id: 2,
+        anime: "JJK",
+        category: "Hoodie",
+        title: "Gojo Infinity Hoodie",
+        price: 1499,
+        oldPrice: 2299,
+        discount: 35,
+        rating: 5,
+        image: "https://cdn.myanimelist.net/images/characters/11/536977.jpg",
+        description:
+        "A heavyweight black hoodie inspired by the strongest sorcerer. Designed for a clean futuristic streetwear look."
+    },
+
+    {
+        id: 3,
+        anime: "One Piece",
+        category: "Oversized",
+        title: "Straw Hat Pirate Tee",
+        price: 999,
+        oldPrice: 1599,
+        discount: 38,
+        rating: 4.8,
+        image: "https://cdn.myanimelist.net/images/characters/9/310307.jpg",
+        description:
+        "Oversized pirate-era streetwear inspired by the future Pirate King."
+    },
+
+    {
+        id: 4,
+        anime: "Demon Slayer",
+        category: "T-Shirt",
+        title: "Sun Breathing Tee",
+        price: 849,
+        oldPrice: 1399,
+        discount: 39,
+        rating: 4.9,
+        image: "https://cdn.myanimelist.net/images/characters/10/503869.jpg",
+        description:
+        "Clean black anime tee inspired by Tanjiro and the legendary Sun Breathing technique."
+    },
+
+    {
+        id: 5,
+        anime: "Dragon Ball",
+        category: "Hoodie",
+        title: "Ultra Instinct Hoodie",
+        price: 1599,
+        oldPrice: 2499,
+        discount: 36,
+        rating: 4.9,
+        image: "https://cdn.myanimelist.net/images/characters/12/553471.jpg",
+        description:
+        "Futuristic Dragon Ball hoodie inspired by the Ultra Instinct transformation."
+    },
+
+    {
+        id: 6,
+        anime: "Solo Leveling",
+        category: "Jacket",
+        title: "Shadow Monarch Jacket",
+        price: 1899,
+        oldPrice: 2999,
+        discount: 37,
+        rating: 5,
+        image: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=900&q=85",
+        description:
+        "Dark premium jacket inspired by the Shadow Monarch aesthetic. Built for a powerful streetwear silhouette."
+    },
+
+    {
+        id: 7,
+        anime: "Naruto",
+        category: "Oversized",
+        title: "Akatsuki Cloud Tee",
+        price: 949,
+        oldPrice: 1599,
+        discount: 41,
+        rating: 4.8,
+        image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=900&q=85",
+        description:
+        "Black oversized tee with an Akatsuki-inspired streetwear aesthetic."
+    },
+
+    {
+        id: 8,
+        anime: "JJK",
+        category: "T-Shirt",
+        title: "Cursed Energy Tee",
+        price: 799,
+        oldPrice: 1299,
+        discount: 38,
+        rating: 4.7,
+        image: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?auto=format&fit=crop&w=900&q=85",
+        description:
+        "Minimal futuristic tee designed around the visual energy of Jujutsu Kaisen."
+    },
+
+    {
+        id: 9,
+        anime: "One Piece",
+        category: "Hoodie",
+        title: "Gear Fifth Hoodie",
+        price: 1699,
+        oldPrice: 2699,
+        discount: 37,
+        rating: 4.9,
+        image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=900&q=85",
+        description:
+        "A powerful oversized hoodie inspired by Luffy's Gear Fifth transformation."
+    },
+
+    {
+        id: 10,
+        anime: "Demon Slayer",
+        category: "Jacket",
+        title: "Hashira Street Jacket",
+        price: 1999,
+        oldPrice: 3299,
+        discount: 39,
+        rating: 5,
+        image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&fit=crop&w=900&q=85",
+        description:
+        "Premium street jacket inspired by the Hashira aesthetic."
+    },
+
+    {
+        id: 11,
+        anime: "Solo Leveling",
+        category: "Oversized",
+        title: "Igris Shadow Tee",
+        price: 1099,
+        oldPrice: 1799,
+        discount: 39,
+        rating: 4.9,
+        image: "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=900&q=85",
+        description:
+        "A dark knight-inspired oversized tee inspired by Igris and the Shadow Army."
+    },
+
+    {
+        id: 12,
+        anime: "Naruto",
+        category: "Hoodie",
+        title: "Sage Mode Hoodie",
+        price: 1549,
+        oldPrice: 2399,
+        discount: 35,
+        rating: 4.8,
+        image: "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=900&q=85",
+        description:
+        "Premium sage-inspired hoodie combining classic anime energy with modern fashion."
+    }
+
+];
+
+
+/* =========================================================
+   STATE
+   ========================================================= */
+
+let cart = [];
+
+let currentFilter = "All";
+
+
+/* =========================================================
+   RENDER PRODUCTS
+   ========================================================= */
+
+function renderProducts(list = products) {
+
+    const grid = document.getElementById("productGrid");
+
+    grid.innerHTML = "";
+
+    if(list.length === 0) {
+
+        grid.innerHTML = `
+            <div style="
+                grid-column:1/-1;
+                text-align:center;
+                padding:70px 20px;
+                color:#777;
+            ">
+                <div style="font-size:45px;">😵</div>
+                <h3 style="margin:15px 0;color:white;">
+                    No anime found
+                </h3>
+                <p>
+                    Try another character or collection.
+                </p>
+            </div>
+        `;
+
+        return;
+    }
+
+
+    list.forEach(product => {
+
+        const card = document.createElement("div");
+
+        card.className = "product";
+
+        card.innerHTML = `
+
+            <div
+                class="product-image"
+                onclick="openProduct(${product.id})"
+                style="cursor:pointer;"
+            >
+
+                <img
+                    src="${product.image}"
+                    alt="${product.title}"
+                    loading="lazy"
+                >
+
+                <span class="discount">
+                    -${product.discount}%
+                </span>
+
+                <button
+                    class="wishlist"
+                    onclick="event.stopPropagation();wishlist('${product.title}')"
+                >
+                    ♡
+                </button>
+
+            </div>
+
+            <div class="product-info">
+
+                <div class="product-anime">
+                    ${product.anime}
+                </div>
+
+                <div class="product-title">
+                    ${product.title}
+                </div>
+
+                <div class="rating">
+                    ★★★★★ ${product.rating}
+                </div>
+
+                <div class="price-row">
+
+                    <span class="price">
+                        ₹${product.price}
+                    </span>
+
+                    <span class="old-price">
+                        ₹${product.oldPrice}
+                    </span>
+
+                </div>
+
+                <button
+                    class="add-btn"
+                    onclick="addToCart(${product.id})"
+                >
+                    + Add to Cart
+                </button>
+
+            </div>
+        `;
+
+        grid.appendChild(card);
+
+    });
+
+}
+
+
+/* =========================================================
+   FILTER PRODUCTS
+   ========================================================= */
+
+function filterProducts(filter) {
+
+    currentFilter = filter;
+
+    document.querySelectorAll(".filter")
+        .forEach(button => button.classList.remove("active"));
+
+    if(filter === "All") {
+
+        document.querySelector(".filter")
+            ?.classList.add("active");
+
+    }
+
+
+    let filtered = products;
+
+    if(filter !== "All") {
+
+        filtered = products.filter(product =>
+            product.anime === filter ||
+            product.category === filter
+        );
+
+    }
+
+    renderProducts(filtered);
+
+    document.getElementById("shop")
+        .scrollIntoView({behavior:"smooth"});
+
+}
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+function searchProducts() {
+
+    const value =
+        document.getElementById("searchInput")
+        .value
+        .toLowerCase()
+        .trim();
+
+
+    let filtered = products;
+
+
+    if(currentFilter !== "All") {
+
+        filtered = filtered.filter(product =>
+            product.anime === currentFilter ||
+            product.category === currentFilter
+        );
+
+    }
+
+
+    if(value) {
+
+        filtered = filtered.filter(product =>
+            product.title.toLowerCase().includes(value) ||
+            product.anime.toLowerCase().includes(value) ||
+            product.category.toLowerCase().includes(value)
+        );
+
+    }
+
+
+    renderProducts(filtered);
+
+}
+
+
+/* =========================================================
+   CART
+   ========================================================= */
+
+function addToCart(id) {
+
+    const product =
+        products.find(item => item.id === id);
+
+    if(!product) return;
+
+
+    cart.push(product);
+
+    updateCart();
+
+    showToast(
+        "🔥 " + product.title + " added to cart!"
+    );
+
+}
+
+
+function updateCart() {
+
+    const container =
+        document.getElementById("cartItems");
+
+    const count =
+        document.getElementById("cartCount");
+
+    const total =
+        document.getElementById("cartTotal");
+
+
+    count.textContent = cart.length;
+
+
+    if(cart.length === 0) {
+
+        container.innerHTML = `
+            <div style="
+                color:#777;
+                text-align:center;
+                padding:50px 10px;
+            ">
+                Your cart is empty.
+            </div>
+        `;
+
+        total.textContent = "₹0";
+
+        return;
+    }
+
+
+    container.innerHTML = "";
+
+
+    cart.forEach((product,index) => {
+
+        const item =
+            document.createElement("div");
+
+        item.className = "cart-item";
+
+        item.innerHTML = `
+
+            <img
+                src="${product.image}"
+                alt="${product.title}"
+            >
+
+            <div class="cart-item-info">
+
+                <strong>
+                    ${product.title}
+                </strong>
+
+                <span>
+                    ₹${product.price}
+                </span>
+
+            </div>
+
+            <button
+                class="remove"
+                onclick="removeCart(${index})"
+            >
+                ✕
+            </button>
+        `;
+
+        container.appendChild(item);
+
+    });
+
+
+    const sum =
+        cart.reduce(
+            (total,product) =>
+            total + product.price,
+            0
+        );
+
+
+    total.textContent =
+        "₹" + sum.toLocaleString("en-IN");
+
+}
+
+
+function removeCart(index) {
+
+    cart.splice(index,1);
+
+    updateCart();
+
+    showToast("Item removed from cart.");
+
+}
+
+
+function openCart() {
+
+    document
+        .getElementById("cartPanel")
+        .classList.add("open");
+
+}
+
+
+function closeCart() {
+
+    document
+        .getElementById("cartPanel")
+        .classList.remove("open");
+
+}
+
+
+/* =========================================================
+   PRODUCT MODAL
+   ========================================================= */
+
+function openProduct(id) {
+
+    const product =
+        products.find(item => item.id === id);
+
+    if(!product) return;
+
+
+    document.getElementById("modalImage")
+        .src = product.image;
+
+    document.getElementById("modalTitle")
+        .textContent = product.title;
+
+    document.getElementById("modalAnime")
+        .textContent = product.anime;
+
+    document.getElementById("modalPrice")
+        .textContent = "₹" + product.price;
+
+    document.getElementById("modalOldPrice")
+        .textContent = "₹" + product.oldPrice;
+
+    document.getElementById("modalDescription")
+        .textContent = product.description;
+
+
+    document.getElementById("modalAdd")
+        .onclick = function() {
+
+            addToCart(product.id);
+
+            closeModal();
+
+        };
+
+
+    document
+        .getElementById("productModal")
+        .classList.add("open");
+
+}
+
+
+function closeModal() {
+
+    document
+        .getElementById("productModal")
+        .classList.remove("open");
+
+}
+
+
+/* =========================================================
+   WISHLIST
+   ========================================================= */
+
+function wishlist(name) {
+
+    showToast(
+        "❤️ " + name + " added to wishlist!"
+    );
+
+}
+
+
+/* =========================================================
+   PROFILE
+   ========================================================= */
+
+function showProfile() {
+
+    const profile =
+        document.getElementById("profile");
+
+    profile.style.display = "block";
+
+    profile.scrollIntoView({
+        behavior:"smooth"
+    });
+
+}
+
+
+/* =========================================================
+   CHECKOUT
+   ========================================================= */
+
+function checkout() {
+
+    if(cart.length === 0) {
+
+        showToast(
+            "🛒 Add something before checkout."
+        );
+
+        return;
+    }
+
+
+    showToast(
+        "⚡ Checkout demo — payment integration ready."
+    );
+
+}
+
+
+/* =========================================================
+   HERO SCROLL
+   ========================================================= */
+
+function scrollToShop() {
+
+    document
+        .getElementById("shop")
+        .scrollIntoView({
+            behavior:"smooth"
+        });
+
+}
+
+
+/* =========================================================
+   TOAST
+   ========================================================= */
+
+let toastTimer;
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById("toast");
+
+    toast.textContent = message;
+
     toast.classList.add("show");
-    clearTimeout(window.toastTimer);
-    window.toastTimer=setTimeout(()=>toast.classList.remove("show"),2200);
-}}
 
-function filterProducts(category,sourceButton){{
-    document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));
-    if(sourceButton) sourceButton.classList.add("active");
-    document.querySelectorAll(".card").forEach(card=>{{
-        card.classList.toggle("hide",category!=="all" && card.dataset.anime!==category);
-    }});
-    document.getElementById("shop").scrollIntoView({{behavior:"smooth"}});
-}}
 
-function search(){{
-    const q=prompt("Search Naruto, Gojo, Igris, tee, hoodie or pants:");
-    if(!q)return;
-    const value=q.toLowerCase().trim();
-    document.querySelectorAll(".card").forEach(card=>{{
-        card.classList.toggle("hide",!card.innerText.toLowerCase().includes(value));
-    }});
-    document.getElementById("shop").scrollIntoView({{behavior:"smooth"}});
-}}
+    clearTimeout(toastTimer);
 
-function subscribe(){{
-    const input=document.getElementById("email");
-    if(!input.value.trim()){{
-        showToast("Enter your email first ✦");
-        return;
-    }}
-    showToast("You're on the KOTA'S drop list ⚡");
-    input.value="";
-}}
 
-function menu(){{
-    const nav=document.querySelector("nav");
-    if(innerWidth>800){{
-        showToast("Navigation is active ✦");
-        return;
-    }}
-    nav.style.display=nav.style.display==="flex"?"none":"flex";
-    nav.style.position="absolute";
-    nav.style.top="68px";
-    nav.style.left="4%";
-    nav.style.right="4%";
-    nav.style.flexDirection="column";
-    nav.style.padding="12px";
-    nav.style.border="1px solid rgba(255,255,255,.1)";
-    nav.style.borderRadius="18px";
-    nav.style.background="#111126";
-}}
+    toastTimer = setTimeout(() => {
 
-document.querySelectorAll("nav a").forEach(link=>{{
-    link.addEventListener("click",()=>{{
-        document.querySelectorAll("nav a").forEach(x=>x.classList.remove("active"));
-        link.classList.add("active");
-    }});
-}});
+        toast.classList.remove("show");
+
+    },2500);
+
+}
+
+
+/* =========================================================
+   MODAL CLICK OUTSIDE
+   ========================================================= */
+
+document
+    .getElementById("productModal")
+    .addEventListener("click", function(event) {
+
+        if(event.target === this) {
+
+            closeModal();
+
+        }
+
+    });
+
+
+/* =========================================================
+   ESCAPE KEY
+   ========================================================= */
+
+document.addEventListener("keydown", function(event) {
+
+    if(event.key === "Escape") {
+
+        closeModal();
+        closeCart();
+
+    }
+
+});
+
+
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
+
+renderProducts();
+
+updateCart();
+
+
 </script>
 
 </body>
 </html>
-'''
-
-# Ensure the source is comfortably above the requested 500 lines.
-lines = html.splitlines()
-while len(lines) < 520:
-    lines.insert(-8, f"<!-- KOTA'S ANIME inline application detail {len(lines)+1} -->")
-
-out = Path("/mnt/data/KOTAS_ANIME_100_PERCENT_SELF_CONTAINED.html")
-out.write_text("\n".join(lines), encoding="utf-8")
-print(f"Created: {out}")
-print(f"Total lines: {len(lines)}")
-print("No external image files, no image URLs, and no base64 images are used.")
-print("Naruto, Gojo and Igris visuals are embedded as inline SVG inside the HTML.")
