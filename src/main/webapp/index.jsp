@@ -3,29 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kota's Smoking Shop</title>
+<title>ANIMEVERSE — Anime Clothing Store</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 <style>
 :root{
-    --bg:#07070b;
-    --bg2:#0d0d16;
-    --card:rgba(255,255,255,.065);
-    --card-hover:rgba(255,255,255,.11);
-    --text:#fff;
-    --muted:#9998aa;
-    --pink:#ff2d95;
+    --bg:#070711;
+    --card:#111124;
+    --card2:#171733;
+    --pink:#ff2f92;
     --purple:#8b5cf6;
     --cyan:#22d3ee;
-    --lime:#b7ff3c;
-    --orange:#ff9b52;
+    --yellow:#ffe45c;
+    --lime:#b8ff3d;
+    --white:#fff;
+    --muted:#a7a7bd;
     --border:rgba(255,255,255,.1);
     --radius:24px;
-    --shadow:0 25px 70px rgba(0,0,0,.4);
 }
 
 *{
@@ -39,59 +36,44 @@ html{
 }
 
 body{
-    font-family:Inter,system-ui,sans-serif;
+    font-family:Inter,Arial,sans-serif;
+    color:var(--white);
     background:
-        radial-gradient(circle at 5% 5%,rgba(255,45,149,.13),transparent 27%),
-        radial-gradient(circle at 95% 12%,rgba(34,211,238,.1),transparent 25%),
-        linear-gradient(180deg,var(--bg),var(--bg2));
-    color:var(--text);
+        radial-gradient(circle at 10% 10%,rgba(255,47,146,.16),transparent 25%),
+        radial-gradient(circle at 90% 20%,rgba(34,211,238,.12),transparent 25%),
+        linear-gradient(180deg,#070711,#0b0b19);
     min-height:100vh;
 }
 
-body:before{
-    content:"";
-    position:fixed;
-    inset:0;
-    pointer-events:none;
-    opacity:.025;
-    background-image:
-        linear-gradient(rgba(255,255,255,.8) 1px,transparent 1px),
-        linear-gradient(90deg,rgba(255,255,255,.8) 1px,transparent 1px);
-    background-size:42px 42px;
-    z-index:-1;
-}
-
 a{
-    color:inherit;
     text-decoration:none;
+    color:inherit;
 }
 
 button{
-    font:inherit;
-    cursor:pointer;
     border:0;
+    cursor:pointer;
+    font-family:inherit;
 }
 
 .container{
-    width:100%;
-    max-width:1320px;
+    width:min(1280px,92%);
     margin:auto;
-    padding:0 24px;
 }
 
-/* ================= HEADER ================= */
+/* HEADER */
 
 header{
     position:sticky;
     top:0;
     z-index:1000;
-    background:rgba(7,7,11,.75);
-    backdrop-filter:blur(22px);
+    background:rgba(7,7,17,.82);
+    backdrop-filter:blur(20px);
     border-bottom:1px solid var(--border);
 }
 
-.header-inner{
-    min-height:74px;
+.header{
+    height:76px;
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -99,139 +81,99 @@ header{
 }
 
 .logo{
-    display:flex;
-    align-items:center;
-    gap:11px;
-    font-size:20px;
+    font-size:23px;
     font-weight:900;
     letter-spacing:-1px;
-    white-space:nowrap;
 }
 
-.logo-icon{
-    width:43px;
-    height:43px;
-    border-radius:14px;
-    display:grid;
-    place-items:center;
-    background:linear-gradient(135deg,var(--pink),var(--purple));
-    box-shadow:0 0 35px rgba(255,45,149,.3);
-}
-
-.logo-gradient{
-    background:linear-gradient(90deg,var(--pink),var(--cyan));
-    -webkit-background-clip:text;
-    background-clip:text;
-    color:transparent;
+.logo span{
+    color:var(--pink);
 }
 
 nav{
     display:flex;
-    align-items:center;
-    gap:4px;
+    gap:8px;
 }
 
 nav a{
-    padding:9px 14px;
-    border-radius:999px;
     color:var(--muted);
+    padding:10px 14px;
+    border-radius:12px;
     font-size:13px;
     font-weight:700;
-    transition:.2s;
 }
 
-nav a:hover,
-nav a.active{
+nav a:hover{
+    color:white;
     background:rgba(255,255,255,.08);
-    color:#fff;
 }
 
-.header-actions{
+.actions{
     display:flex;
-    align-items:center;
-    gap:7px;
+    gap:8px;
 }
 
-.icon-btn{
-    width:41px;
-    height:41px;
-    display:grid;
-    place-items:center;
+.icon{
+    width:42px;
+    height:42px;
     border-radius:50%;
-    color:#fff;
-    background:rgba(255,255,255,.06);
+    color:white;
+    background:rgba(255,255,255,.07);
     border:1px solid var(--border);
-    transition:.2s;
 }
 
-.icon-btn:hover{
-    transform:translateY(-2px);
-    background:linear-gradient(135deg,var(--pink),var(--purple));
-}
-
-.mobile-btn{
-    display:none;
-}
-
-/* ================= HERO ================= */
+/* HERO */
 
 .hero{
-    position:relative;
-    min-height:610px;
-    margin:20px 12px 0;
-    border:1px solid var(--border);
-    border-radius:34px;
+    min-height:650px;
+    margin:22px 0;
+    border-radius:32px;
     overflow:hidden;
+    position:relative;
     display:flex;
     align-items:center;
     background:
-        linear-gradient(90deg,rgba(5,5,9,.96),rgba(5,5,9,.72),rgba(5,5,9,.25)),
-        url("https://images.unsplash.com/photo-1524678606370-a47ad25cb82a?auto=format&fit=crop&w=1800&q=85")
+        linear-gradient(90deg,rgba(5,5,14,.97),rgba(5,5,14,.78),rgba(5,5,14,.25)),
+        url("https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=1800&q=85")
         center/cover;
-    box-shadow:var(--shadow);
 }
 
 .hero:after{
     content:"";
     position:absolute;
-    width:500px;
-    height:500px;
-    right:-170px;
-    top:-150px;
+    width:450px;
+    height:450px;
+    right:-100px;
+    top:-120px;
     border-radius:50%;
     background:linear-gradient(135deg,var(--pink),var(--purple),var(--cyan));
-    filter:blur(85px);
-    opacity:.22;
+    filter:blur(90px);
+    opacity:.35;
 }
 
 .hero-content{
     position:relative;
     z-index:2;
-    max-width:760px;
-    padding:75px 0;
+    max-width:700px;
 }
 
-.eyebrow{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    padding:8px 14px;
-    margin-bottom:21px;
-    border-radius:999px;
-    color:#ff91c9;
-    background:rgba(255,45,149,.12);
-    border:1px solid rgba(255,45,149,.28);
-    font-size:10px;
+.badge{
+    display:inline-block;
+    padding:8px 15px;
+    border-radius:50px;
+    background:rgba(255,47,146,.15);
+    border:1px solid rgba(255,47,146,.35);
+    color:#ff8bc2;
+    font-size:11px;
     font-weight:900;
-    letter-spacing:.9px;
+    margin-bottom:22px;
 }
 
 .hero h1{
-    font-size:clamp(48px,7vw,88px);
-    line-height:.92;
-    letter-spacing:-5px;
-    font-weight:900;
-    margin-bottom:23px;
+    font-size:clamp(52px,8vw,96px);
+    line-height:.9;
+    letter-spacing:-6px;
+    margin-bottom:25px;
 }
 
 .gradient{
@@ -242,117 +184,91 @@ nav a.active{
 }
 
 .hero p{
-    max-width:590px;
-    color:#bdbcca;
-    font-size:16px;
-    line-height:1.75;
-    margin-bottom:29px;
+    color:#c4c4d4;
+    max-width:600px;
+    line-height:1.7;
+    margin-bottom:30px;
 }
 
-.hero-buttons{
+.buttons{
     display:flex;
     gap:12px;
     flex-wrap:wrap;
 }
 
 .btn{
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    gap:9px;
-    padding:14px 23px;
-    border-radius:999px;
-    color:white;
-    font-size:13px;
+    padding:14px 22px;
+    border-radius:14px;
     font-weight:800;
-    transition:.2s;
+    font-size:13px;
 }
 
-.btn-primary{
+.primary{
+    color:white;
     background:linear-gradient(100deg,var(--pink),var(--purple));
-    box-shadow:0 12px 35px rgba(255,45,149,.25);
 }
 
-.btn-primary:hover{
-    transform:translateY(-3px) scale(1.02);
-    box-shadow:0 18px 45px rgba(139,92,246,.35);
-}
-
-.btn-secondary{
+.secondary{
+    color:white;
     background:rgba(255,255,255,.08);
     border:1px solid var(--border);
 }
 
-.btn-secondary:hover{
-    background:rgba(255,255,255,.14);
-    transform:translateY(-3px);
-}
-
-/* ================= SECTIONS ================= */
+/* SECTION */
 
 section{
-    padding:68px 0;
+    padding:65px 0;
 }
 
-.section-heading{
+.section-title{
     display:flex;
     justify-content:space-between;
     align-items:end;
-    margin-bottom:29px;
+    margin-bottom:28px;
 }
 
-.section-heading h2{
-    font-size:31px;
-    font-weight:900;
-    letter-spacing:-1.5px;
+.section-title h2{
+    font-size:34px;
+    letter-spacing:-2px;
 }
 
-.section-heading p{
-    margin-top:6px;
+.section-title p{
     color:var(--muted);
     font-size:13px;
+    margin-top:6px;
 }
 
-/* ================= CATEGORY ================= */
+/* CATEGORIES */
 
 .categories{
     display:grid;
-    grid-template-columns:repeat(5,1fr);
-    gap:15px;
+    grid-template-columns:repeat(6,1fr);
+    gap:14px;
 }
 
 .category{
-    min-height:155px;
+    min-height:140px;
     padding:22px;
     border-radius:22px;
     background:var(--card);
     border:1px solid var(--border);
     transition:.25s;
-    position:relative;
-    overflow:hidden;
 }
 
 .category:hover{
-    transform:translateY(-8px) rotate(-1deg);
-    background:var(--card-hover);
-    border-color:rgba(255,45,149,.4);
-    box-shadow:var(--shadow);
+    transform:translateY(-7px);
+    border-color:var(--pink);
 }
 
 .category-icon{
-    width:54px;
-    height:54px;
+    width:50px;
+    height:50px;
+    border-radius:15px;
     display:grid;
     place-items:center;
-    margin-bottom:18px;
-    border-radius:17px;
-    background:linear-gradient(
-        135deg,
-        rgba(255,45,149,.17),
-        rgba(34,211,238,.13)
-    );
-    color:var(--cyan);
-    font-size:22px;
+    font-size:24px;
+    margin-bottom:17px;
+    background:linear-gradient(135deg,var(--pink),var(--purple));
 }
 
 .category h3{
@@ -362,10 +278,35 @@ section{
 
 .category p{
     color:var(--muted);
-    font-size:11px;
+    font-size:10px;
 }
 
-/* ================= PRODUCTS ================= */
+/* FILTERS */
+
+.filters{
+    display:flex;
+    gap:9px;
+    flex-wrap:wrap;
+    margin-bottom:28px;
+}
+
+.filter{
+    padding:10px 15px;
+    border-radius:50px;
+    background:var(--card);
+    color:var(--muted);
+    border:1px solid var(--border);
+    font-size:11px;
+    font-weight:800;
+}
+
+.filter.active,
+.filter:hover{
+    color:white;
+    background:linear-gradient(100deg,var(--pink),var(--purple));
+}
+
+/* PRODUCTS */
 
 .products{
     display:grid;
@@ -375,91 +316,94 @@ section{
 
 .product{
     overflow:hidden;
-    border-radius:23px;
     background:var(--card);
     border:1px solid var(--border);
+    border-radius:24px;
     transition:.25s;
 }
 
 .product:hover{
     transform:translateY(-8px);
-    border-color:rgba(139,92,246,.5);
-    box-shadow:var(--shadow);
+    box-shadow:0 20px 60px rgba(0,0,0,.4);
+    border-color:rgba(139,92,246,.6);
 }
 
 .product-image{
-    height:245px;
+    height:300px;
     position:relative;
     overflow:hidden;
-    background:#15151e;
+    background:#18182d;
 }
 
 .product-image img{
     width:100%;
     height:100%;
     object-fit:cover;
-    transition:.5s cubic-bezier(.2,.8,.2,1);
+    transition:.5s;
 }
 
-.product:hover .product-image img{
-    transform:scale(1.08);
+.product:hover img{
+    transform:scale(1.07);
 }
 
 .tag{
     position:absolute;
-    top:12px;
     left:12px;
-    z-index:2;
-    padding:5px 10px;
-    border-radius:999px;
+    top:12px;
+    padding:6px 10px;
+    border-radius:30px;
     background:var(--lime);
     color:#111;
     font-size:9px;
     font-weight:900;
 }
 
-.heart{
+.wish{
     position:absolute;
-    top:11px;
-    right:11px;
-    z-index:3;
-    width:37px;
-    height:37px;
+    right:12px;
+    top:12px;
+    width:38px;
+    height:38px;
     border-radius:50%;
+    background:rgba(0,0,0,.6);
     color:white;
-    background:rgba(0,0,0,.55);
-    border:1px solid rgba(255,255,255,.12);
 }
 
-.product-body{
-    padding:17px;
+.product-info{
+    padding:18px;
 }
 
-.product-brand{
+.brand{
     color:var(--cyan);
-    font-size:10px;
-    font-weight:900;
     text-transform:uppercase;
-    letter-spacing:.8px;
+    font-size:9px;
+    font-weight:900;
+    letter-spacing:1px;
 }
 
 .product h3{
-    margin:6px 0 9px;
+    margin:7px 0;
     font-size:15px;
 }
 
-.product-description{
-    min-height:35px;
+.description{
     color:var(--muted);
     font-size:11px;
-    line-height:1.55;
+    line-height:1.5;
+    min-height:34px;
 }
 
-.product-footer{
+.rating{
+    color:var(--yellow);
+    font-size:11px;
+    margin-top:10px;
+}
+
+.product-bottom{
     display:flex;
-    align-items:center;
     justify-content:space-between;
-    margin-top:16px;
+    align-items:center;
+    margin-top:15px;
 }
 
 .price{
@@ -467,196 +411,211 @@ section{
     font-weight:900;
 }
 
-.view-btn{
+.add{
     padding:9px 13px;
-    border-radius:11px;
+    border-radius:10px;
     color:white;
-    background:rgba(255,255,255,.08);
-    border:1px solid var(--border);
+    background:linear-gradient(100deg,var(--purple),var(--pink));
     font-size:10px;
     font-weight:900;
 }
 
-.view-btn:hover{
-    background:linear-gradient(100deg,var(--pink),var(--purple));
-}
-
-/* ================= FEATURE ================= */
+/* FEATURE */
 
 .feature{
     display:grid;
     grid-template-columns:1fr 1fr;
-    min-height:390px;
+    min-height:420px;
     overflow:hidden;
     border-radius:30px;
+    background:linear-gradient(135deg,#25102e,#10182d);
     border:1px solid var(--border);
-    background:linear-gradient(135deg,#24102e,#101727);
-    box-shadow:var(--shadow);
 }
 
 .feature-image{
-    min-height:330px;
     background:
-        url("https://images.unsplash.com/photo-1547887538-e3a2f32cb1cc?auto=format&fit=crop&w=1000&q=85")
+        linear-gradient(90deg,transparent,rgba(16,16,30,.3)),
+        url("https://images.unsplash.com/photo-1564507004663-b6dfb3c824d5?auto=format&fit=crop&w=1000&q=85")
         center/cover;
 }
 
 .feature-content{
     display:flex;
-    flex-direction:column;
     justify-content:center;
-    padding:50px;
+    flex-direction:column;
+    padding:55px;
 }
 
 .feature-content small{
     color:var(--pink);
     font-weight:900;
-    letter-spacing:1px;
-    margin-bottom:11px;
+    letter-spacing:2px;
+    margin-bottom:12px;
 }
 
 .feature-content h2{
-    max-width:500px;
-    font-size:39px;
-    line-height:1;
-    letter-spacing:-2px;
-    margin-bottom:16px;
+    font-size:44px;
+    line-height:.95;
+    letter-spacing:-3px;
+    margin-bottom:18px;
 }
 
 .feature-content p{
-    max-width:470px;
     color:var(--muted);
-    font-size:13px;
     line-height:1.7;
-    margin-bottom:23px;
+    font-size:13px;
+    max-width:480px;
+    margin-bottom:25px;
 }
 
-/* ================= COLLECTION CARDS ================= */
+/* COLLECTION */
 
 .collection-grid{
     display:grid;
     grid-template-columns:repeat(3,1fr);
-    gap:16px;
+    gap:18px;
 }
 
 .collection{
-    padding:27px;
-    border-radius:23px;
-    background:var(--card);
+    min-height:230px;
+    padding:28px;
+    border-radius:24px;
     border:1px solid var(--border);
+    background:
+        linear-gradient(135deg,rgba(255,47,146,.1),rgba(34,211,238,.04)),
+        var(--card);
     transition:.25s;
 }
 
 .collection:hover{
-    transform:translateY(-6px);
-    background:var(--card-hover);
+    transform:translateY(-7px);
 }
 
-.collection i{
-    color:var(--pink);
-    font-size:25px;
-    margin-bottom:18px;
+.collection .emoji{
+    font-size:38px;
+    margin-bottom:22px;
 }
 
 .collection h3{
-    font-size:16px;
-    margin-bottom:8px;
+    font-size:18px;
+    margin-bottom:9px;
 }
 
 .collection p{
     color:var(--muted);
+    line-height:1.6;
     font-size:12px;
-    line-height:1.65;
 }
 
-/* ================= NOTICE ================= */
+/* NEWSLETTER */
 
-.notice{
+.newsletter{
+    padding:50px;
+    border-radius:28px;
+    text-align:center;
+    background:
+        radial-gradient(circle at 50% 0,rgba(255,47,146,.25),transparent 50%),
+        var(--card);
+    border:1px solid var(--border);
+}
+
+.newsletter h2{
+    font-size:34px;
+    margin-bottom:10px;
+}
+
+.newsletter p{
+    color:var(--muted);
+    font-size:13px;
+    margin-bottom:22px;
+}
+
+.email-box{
+    max-width:520px;
+    margin:auto;
     display:flex;
-    align-items:center;
-    gap:15px;
-    padding:23px;
-    border-radius:19px;
-    background:rgba(255,155,82,.08);
-    border:1px solid rgba(255,155,82,.22);
-    color:#ffc39e;
-    font-size:12px;
-    line-height:1.65;
+    gap:8px;
 }
 
-.notice i{
-    color:var(--orange);
-    font-size:23px;
+.email-box input{
+    flex:1;
+    padding:14px 17px;
+    border-radius:13px;
+    border:1px solid var(--border);
+    background:#080812;
+    color:white;
+    outline:none;
 }
 
-/* ================= FOOTER ================= */
+.email-box button{
+    padding:14px 20px;
+    border-radius:13px;
+    background:linear-gradient(100deg,var(--pink),var(--purple));
+    color:white;
+    font-weight:800;
+}
+
+/* FOOTER */
 
 footer{
-    padding:52px 0 25px;
     border-top:1px solid var(--border);
+    padding:50px 0 25px;
 }
 
 .footer-grid{
     display:grid;
     grid-template-columns:2fr 1fr 1fr 1fr;
-    gap:40px;
+    gap:35px;
     margin-bottom:35px;
 }
 
 footer h4{
     margin-bottom:13px;
-    font-size:13px;
+    font-size:12px;
 }
 
 footer p,
 footer a{
     color:var(--muted);
-    font-size:12px;
+    font-size:11px;
     line-height:2;
 }
 
 footer a:hover{
-    color:var(--cyan);
-}
-
-.socials{
-    display:flex;
-    gap:8px;
-    margin-top:15px;
-}
-
-.socials a{
-    width:39px;
-    height:39px;
-    display:grid;
-    place-items:center;
-    border-radius:12px;
-    background:rgba(255,255,255,.06);
-    border:1px solid var(--border);
-}
-
-.socials a:hover{
-    color:white;
-    background:linear-gradient(135deg,var(--pink),var(--purple));
+    color:var(--pink);
 }
 
 .copyright{
     padding-top:20px;
     border-top:1px solid var(--border);
     text-align:center;
-    color:#626276;
+    color:#646477;
     font-size:10px;
 }
 
-/* ================= RESPONSIVE ================= */
+/* CART */
+
+.cart{
+    position:fixed;
+    right:25px;
+    bottom:25px;
+    z-index:900;
+    padding:15px 20px;
+    border-radius:50px;
+    background:linear-gradient(100deg,var(--pink),var(--purple));
+    box-shadow:0 15px 40px rgba(255,47,146,.3);
+    font-size:12px;
+    font-weight:900;
+}
+
+/* MOBILE */
 
 @media(max-width:1100px){
-
-    .products{
+    .categories{
         grid-template-columns:repeat(3,1fr);
     }
 
-    .categories{
+    .products{
         grid-template-columns:repeat(3,1fr);
     }
 
@@ -666,29 +625,15 @@ footer a:hover{
 }
 
 @media(max-width:800px){
-
     nav{
         display:none;
     }
 
-    .mobile-btn{
-        display:grid;
-    }
-
     .hero{
-        min-height:540px;
-    }
-
-    .hero h1{
-        font-size:55px;
-        letter-spacing:-3px;
+        min-height:570px;
     }
 
     .products{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .categories{
         grid-template-columns:repeat(2,1fr);
     }
 
@@ -696,8 +641,8 @@ footer a:hover{
         grid-template-columns:1fr;
     }
 
-    .feature-content{
-        padding:36px;
+    .feature-image{
+        min-height:300px;
     }
 
     .collection-grid{
@@ -706,28 +651,17 @@ footer a:hover{
 }
 
 @media(max-width:520px){
-
-    .container{
-        padding:0 14px;
-    }
-
-    .header-inner{
-        min-height:66px;
-    }
-
-    .hero{
-        margin:10px 6px 0;
-        min-height:490px;
-        border-radius:25px;
-    }
-
     .hero h1{
-        font-size:42px;
-        letter-spacing:-2px;
+        font-size:46px;
+        letter-spacing:-3px;
     }
 
     .hero p{
-        font-size:13px;
+        font-size:12px;
+    }
+
+    .categories{
+        grid-template-columns:repeat(2,1fr);
     }
 
     .products{
@@ -735,45 +669,43 @@ footer a:hover{
     }
 
     .product-image{
-        height:175px;
+        height:220px;
     }
 
-    .product-body{
-        padding:12px;
+    .product-info{
+        padding:13px;
     }
 
     .product h3{
         font-size:12px;
     }
 
-    .product-description{
-        font-size:10px;
-    }
-
-    .price{
-        font-size:15px;
-    }
-
-    .view-btn{
-        padding:7px 9px;
+    .description{
         font-size:9px;
     }
 
-    .section-heading h2{
-        font-size:24px;
+    .price{
+        font-size:14px;
+    }
+
+    .feature-content{
+        padding:30px;
+    }
+
+    .feature-content h2{
+        font-size:32px;
+    }
+
+    .newsletter{
+        padding:30px 18px;
+    }
+
+    .email-box{
+        flex-direction:column;
     }
 
     .footer-grid{
         grid-template-columns:1fr;
-        gap:22px;
-    }
-
-    .feature-content h2{
-        font-size:30px;
-    }
-
-    .notice{
-        align-items:flex-start;
     }
 }
 </style>
@@ -782,652 +714,650 @@ footer a:hover{
 <body>
 
 <header>
+<div class="container header">
 
-    <div class="container header-inner">
+<a href="#" class="logo">ANIME<span>VERSE</span> ✦</a>
 
-        <a href="#" class="logo">
+<nav>
+<a href="#home">Home</a>
+<a href="#anime">Anime</a>
+<a href="#products">Shop</a>
+<a href="#featured">Featured</a>
+<a href="#collections">Collections</a>
+</nav>
 
-            <div class="logo-icon">
-                <i class="fa-solid fa-store"></i>
-            </div>
+<div class="actions">
+<button class="icon">⌕</button>
+<button class="icon">♡</button>
+<button class="icon">☰</button>
+</div>
 
-            Kota's <span class="logo-gradient">Smoking Shop</span>
-
-        </a>
-
-        <nav>
-
-            <a href="#" class="active">Home</a>
-            <a href="#categories">Collections</a>
-            <a href="#accessories">Accessories</a>
-            <a href="#featured">Featured</a>
-            <a href="#about">About</a>
-
-        </nav>
-
-        <div class="header-actions">
-
-            <button class="icon-btn" id="searchBtn">
-                <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
-
-            <button class="icon-btn">
-                <i class="fa-regular fa-heart"></i>
-            </button>
-
-            <button class="icon-btn mobile-btn" id="menuBtn">
-                <i class="fa-solid fa-bars"></i>
-            </button>
-
-        </div>
-
-    </div>
-
+</div>
 </header>
-
 
 <main>
 
-<!-- ================= HERO ================= -->
+<section class="hero" id="home">
+<div class="container">
+<div class="hero-content">
 
-<section class="hero">
+<div class="badge">⚡ NEW DROP • ANIME STREETWEAR 2026</div>
 
-    <div class="container">
+<h1>
+WEAR YOUR<br>
+<span class="gradient">ANIME.</span>
+</h1>
 
-        <div class="hero-content">
+<p>
+Level up your wardrobe with character-inspired anime
+streetwear. Discover oversized T-shirts, hoodies,
+pants, jackets and collectible fashion inspired by
+your favorite anime worlds.
+</p>
 
-            <div class="eyebrow">
-                <i class="fa-solid fa-sparkles"></i>
-                KOTA'S • NEXT-GEN ACCESSORIES
-            </div>
+<div class="buttons">
+<a href="#products" class="btn primary">SHOP THE DROP →</a>
+<a href="#anime" class="btn secondary">EXPLORE ANIME</a>
+</div>
 
-            <h1>
-                BUILD YOUR<br>
-                <span class="gradient">SETUP.</span>
-            </h1>
-
-            <p>
-                Discover modern hookah equipment, glassware,
-                rolling accessories, storage solutions and
-                premium lifestyle gear — all in one place.
-            </p>
-
-            <div class="hero-buttons">
-
-                <a href="#categories" class="btn btn-primary">
-                    Explore Collection
-                    <i class="fa-solid fa-arrow-right"></i>
-                </a>
-
-                <a href="#featured" class="btn btn-secondary">
-                    Featured Picks
-                </a>
-
-            </div>
-
-        </div>
-
-    </div>
-
+</div>
+</div>
 </section>
 
+<section id="anime">
+<div class="container">
 
-<!-- ================= CATEGORIES ================= -->
+<div class="section-title">
+<div>
+<h2>Choose Your Universe</h2>
+<p>Find your favorite anime collection.</p>
+</div>
+</div>
 
-<section id="categories">
+<div class="categories">
 
-    <div class="container">
+<div class="category">
+<div class="category-icon">🍥</div>
+<h3>Naruto</h3>
+<p>Ninja streetwear</p>
+</div>
 
-        <div class="section-heading">
+<div class="category">
+<div class="category-icon">📓</div>
+<h3>Death Note</h3>
+<p>Dark collection</p>
+</div>
 
-            <div>
-                <h2>Shop Your Vibe</h2>
-                <p>Modern equipment and accessories.</p>
-            </div>
+<div class="category">
+<div class="category-icon">⚔️</div>
+<h3>Attack on Titan</h3>
+<p>Scout-inspired gear</p>
+</div>
 
-        </div>
+<div class="category">
+<div class="category-icon">🏐</div>
+<h3>Haikyuu!!</h3>
+<p>Volleyball style</p>
+</div>
 
-        <div class="categories">
+<div class="category">
+<div class="category-icon">⚽</div>
+<h3>Blue Lock</h3>
+<p>Football collection</p>
+</div>
 
-            <div class="category">
-                <div class="category-icon">
-                    <i class="fa-solid fa-bong"></i>
-                </div>
-                <h3>Hookah Equipment</h3>
-                <p>Modern hookah hardware</p>
-            </div>
+<div class="category">
+<div class="category-icon">✨</div>
+<h3>Anime Mix</h3>
+<p>All characters</p>
+</div>
 
-            <div class="category">
-                <div class="category-icon">
-                    <i class="fa-solid fa-fire"></i>
-                </div>
-                <h3>Rolling Accessories</h3>
-                <p>Trays, papers & tools</p>
-            </div>
-
-            <div class="category">
-                <div class="category-icon">
-                    <i class="fa-solid fa-box"></i>
-                </div>
-                <h3>Storage Gear</h3>
-                <p>Cases & organizers</p>
-            </div>
-
-            <div class="category">
-                <div class="category-icon">
-                    <i class="fa-solid fa-wand-magic-sparkles"></i>
-                </div>
-                <h3>Cleaning Gear</h3>
-                <p>Care & maintenance</p>
-            </div>
-
-            <div class="category">
-                <div class="category-icon">
-                    <i class="fa-solid fa-gift"></i>
-                </div>
-                <h3>Gift Collection</h3>
-                <p>Premium lifestyle gifts</p>
-            </div>
-
-        </div>
-
-    </div>
-
+</div>
+</div>
 </section>
 
-
-<!-- ================= ACCESSORIES ================= -->
-
-<section id="accessories">
-
-    <div class="container">
-
-        <div class="section-heading">
-
-            <div>
-                <h2>Accessory Drop</h2>
-                <p>Fresh equipment for your collection.</p>
-            </div>
-
-        </div>
-
-        <div class="products">
-
-
-            <article class="product">
-
-                <div class="product-image">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1547887538-e3a2f32cb1cc?auto=format&fit=crop&w=700&q=85"
-                        alt="Glass accessory"
-                    >
-
-                    <span class="tag">FEATURED</span>
-
-                    <button class="heart">
-                        <i class="fa-regular fa-heart"></i>
-                    </button>
-
-                </div>
-
-                <div class="product-body">
-
-                    <div class="product-brand">
-                        Kota Select
-                    </div>
-
-                    <h3>Premium Glass Piece</h3>
-
-                    <p class="product-description">
-                        Modern glassware designed for display
-                        and accessory use.
-                    </p>
-
-                    <div class="product-footer">
-
-                        <span class="price">$89</span>
-
-                        <button class="view-btn">
-                            VIEW
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-
-            <article class="product">
-
-                <div class="product-image">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1524678606370-a47ad25cb82a?auto=format&fit=crop&w=700&q=85"
-                        alt="Hookah equipment"
-                    >
-
-                    <span class="tag">HOT</span>
-
-                    <button class="heart">
-                        <i class="fa-regular fa-heart"></i>
-                    </button>
-
-                </div>
-
-                <div class="product-body">
-
-                    <div class="product-brand">
-                        Kota Select
-                    </div>
-
-                    <h3>Modern Hookah Setup</h3>
-
-                    <p class="product-description">
-                        Contemporary hookah equipment and
-                        compatible accessories.
-                    </p>
-
-                    <div class="product-footer">
-
-                        <span class="price">$149</span>
-
-                        <button class="view-btn">
-                            VIEW
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-
-            <article class="product">
-
-                <div class="product-image">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=700&q=85"
-                        alt="Storage case"
-                    >
-
-                    <button class="heart">
-                        <i class="fa-regular fa-heart"></i>
-                    </button>
-
-                </div>
-
-                <div class="product-body">
-
-                    <div class="product-brand">
-                        Urban Gear
-                    </div>
-
-                    <h3>Travel Storage Case</h3>
-
-                    <p class="product-description">
-                        Compact protective storage for
-                        accessories and equipment.
-                    </p>
-
-                    <div class="product-footer">
-
-                        <span class="price">$39</span>
-
-                        <button class="view-btn">
-                            VIEW
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-
-            <article class="product">
-
-                <div class="product-image">
-
-                    <img
-                        src="https://images.unsplash.com/photo-1584634731339-252c581abfc5?auto=format&fit=crop&w=700&q=85"
-                        alt="Cleaning accessories"
-                    >
-
-                    <span class="tag">NEW</span>
-
-                    <button class="heart">
-                        <i class="fa-regular fa-heart"></i>
-                    </button>
-
-                </div>
-
-                <div class="product-body">
-
-                    <div class="product-brand">
-                        Kota Tools
-                    </div>
-
-                    <h3>Cleaning Tool Kit</h3>
-
-                    <p class="product-description">
-                        Equipment-care accessories for
-                        cleaning and maintenance.
-                    </p>
-
-                    <div class="product-footer">
-
-                        <span class="price">$29</span>
-
-                        <button class="view-btn">
-                            VIEW
-                        </button>
-
-                    </div>
-
-                </div>
-
-            </article>
-
-        </div>
-
-    </div>
-
+<section id="products">
+<div class="container">
+
+<div class="section-title">
+<div>
+<h2>Trending Drops</h2>
+<p>Fresh anime fits for your next look.</p>
+</div>
+</div>
+
+<div class="filters">
+<button class="filter active" onclick="filterProducts('all')">ALL</button>
+<button class="filter" onclick="filterProducts('naruto')">NARUTO</button>
+<button class="filter" onclick="filterProducts('death')">DEATH NOTE</button>
+<button class="filter" onclick="filterProducts('aot')">ATTACK ON TITAN</button>
+<button class="filter" onclick="filterProducts('haikyuu')">HAIKYUU</button>
+<button class="filter" onclick="filterProducts('soccer')">SOCCER ANIME</button>
+</div>
+
+<div class="products">
+
+<article class="product" data-anime="naruto">
+<div class="product-image">
+<img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=800&q=85">
+<span class="tag">HOT</span>
+<button class="wish" onclick="wishlist(this)">♡</button>
+</div>
+<div class="product-info">
+<div class="brand">Ninja Collection</div>
+<h3>Naruto Orange Oversized Tee</h3>
+<p class="description">Orange streetwear T-shirt inspired by the Hidden Leaf ninja aesthetic.</p>
+<div class="rating">★★★★★</div>
+<div class="product-bottom">
+<span class="price">₹1,299</span>
+<button class="add" onclick="addCart('Naruto Orange Tee')">ADD +</button>
+</div>
+</div>
+</article>
+
+<article class="product" data-anime="naruto">
+<div class="product-image">
+<img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=800&q=85">
+<span class="tag">NEW</span>
+<button class="wish" onclick="wishlist(this)">♡</button>
+</div>
+<div class="product-info">
+<div class="brand">Leaf Village</div>
+<h3>Akatsuki Cloud Hoodie</h3>
+<p class="description">Black oversized hoodie featuring a bold red cloud-inspired graphic.</p>
+<div class="rating">★★★★★</div>
+<div class="product-bottom">
+<span class="price">₹2,499</span>
+<button class="add" onclick="addCart('Akatsuki Hoodie')">ADD +</button>
+</div>
+</div>
+</article>
+
+<article class="product" data-anime="death">
+<div class="product-image">
+<img src="https://images.unsplash.com/photo-1576566588028-4147f3842f27?auto=format&fit=crop&w=800&q=85">
+<span class="tag">DARK</span>
+<button class="wish" onclick="wishlist(this)">♡</button>
+</div>
+<div class="product-info">
+<div class="brand">Dark Universe</div>
+<h3>Death Note Black Tee</h3>
+<p class="description">Minimal black graphic tee inspired by the mysterious Death Note universe.</p>
+<div class="rating">★★★★★</div>
+<div class="product-bottom">
+<span class="price">₹1,399</span>
+<button class="add" onclick="addCart('Death Note Tee')">ADD +</button>
+</div>
+</div>
+</article>
+
+<article class="product" data-anime="death">
+<div class="product-image">
+<img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=800&q=85">
+<span class="tag">LIMITED</span>
+<button class="wish" onclick="wishlist(this)">♡</button>
+</div>
+<div class="product-info">
+<div class="brand">Kira Collection</div>
+<h3>Kira Oversized Shirt</h3>
+<p class="description">Dark oversized fashion piece with notebook-inspired artwork.</p>
+<div class="rating">★★★★☆</div>
+<div class="product-bottom">
+<span class="price">₹1,599</span>
+<button class="add" onclick="addCart('Kira Shirt')">ADD +</button>
+</div>
+</div>
+</article>
+
+<article class="product" data-anime="aot">
+<div class="product-image">
+<img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=800&q=85">
+<span class="tag">EPIC</span>
+<button class="wish" onclick="wishlist(this)">♡</button>
+</div>
+<div class="product-info">
+<div class="brand">Scout Regiment</div>
+<h3>Attack on Titan Scout Tee</h3>
+<p class="description">Military-inspired anime streetwear with a bold scout aesthetic.</p>
+<div class="rating">★★★★★</div>
+<div class="product-bottom">
+<span class="price">₹1,499</span>
+<button class="add" onclick="addCart('AOT Scout Tee')">ADD +</button>
+</div>
+</div>
+</article>
+
+<article class="product" data-anime="aot">
+<div class="product-image">
+<img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=800&q=85">
+<span class="tag">NEW</span>
+<button class="wish" onclick="wishlist(this)">♡</button>
+</div>
+<div class="product-info">
+<div class="brand">Titan Series</div>
+<h3>Survey Corps Cargo Pants</h3>
+<p class="description">Streetwear cargo pants inspired by the Survey Corps aesthetic.</p>
+<div class="rating">★★★★★</div>
+<div class="product-bottom">
+<span class="price">₹2,199</span>
+<button class="add" onclick="addCart('Survey Corps Pants')">ADD +</button>
+</div>
+</div>
+</article>
+
+<article class="product" data-anime="haikyuu">
+<div class="product-image">
+<img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=800&q=85">
+<span class="tag">SPORT</span>
+<button class="wish" onclick="wishlist(this)">♡</button>
+</div>
+<div class="product-info">
+<div class="brand">Volleyball Club</div>
+<h3>Haikyuu Orange Tee</h3>
+<p class="description">High-energy volleyball inspired oversized anime T-shirt.</p>
+<div class="rating">★★★★★</div>
+<div class="product-bottom">
+<span class="price">₹1,299</span>
+<button class="add" onclick="addCart('Haikyuu Tee')">ADD +</button>
+</div>
+</div>
+</article>
+
+<article class="product" data-anime="haikyuu">
+<div class="product-image">
+<img src="https://images.unsplash.com/photo-1523381294911-8d3cead13475?auto=format&fit=crop&w=800&q=85">
+<span class="tag">FRESH</span>
+<button class="wish" onclick="wishlist(this)">♡</button>
+</div>
+<div class="product-info">
+<div class="brand">Karasuno</div>
+<h3>Karasuno Varsity Jacket</h3>
+<p class="description">Sporty varsity-inspired jacket for volleyball anime fans.</p>
+<div class="rating">★★★★☆</div>
+<div class="product-bottom">
+<span class="price">₹2,999</span>
+<button class="add" onclick="addCart('Karasuno Jacket')">ADD +</button>
+</div>
+</div>
+</article>
+
+<article class="product" data-anime="soccer">
+<div class="product-image">
+<img src="https://images.unsplash.com/photo-1526232761682-d26e03ac148e?auto=format&fit=crop&w=800&q=85">
+<span class="tag">GOAL</span>
+<button class="wish" onclick="wishlist(this)">♡</button>
+</div>
+<div class="product-info">
+<div class="brand">Striker Series</div>
+<h3>Blue Striker Oversized Tee</h3>
+<p class="description">Football anime inspired streetwear built for competitive energy.</p>
+<div class="rating">★★★★★</div>
+<div class="product-bottom">
+<span class="price">₹1,399</span>
+<button class="add" onclick="addCart('Blue Striker Tee')">ADD +</button>
+</div>
+</div>
+</article>
+
+<article class="product" data-anime="soccer">
+<div class="product-image">
+<img src="https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&w=800&q=85">
+<span class="tag">MVP</span>
+<button class="wish" onclick="wishlist(this)">♡</button>
+</div>
+<div class="product-info">
+<div class="brand">Football Anime</div>
+<h3>Striker Training Pants</h3>
+<p class="description">Relaxed fit sports pants with an anime football aesthetic.</p>
+<div class="rating">★★★★★</div>
+<div class="product-bottom">
+<span class="price">₹1,899</span>
+<button class="add" onclick="addCart('Striker Pants')">ADD +</button>
+</div>
+</div>
+</article>
+
+<article class="product" data-anime="naruto">
+<div class="product-image">
+<img src="https://images.unsplash.com/photo-1523398002811-999ca8dec234?auto=format&fit=crop&w=800&q=85">
+<span class="tag">DROP</span>
+<button class="wish" onclick="wishlist(this)">♡</button>
+</div>
+<div class="product-info">
+<div class="brand">Shinobi</div>
+<h3>Hidden Leaf Cargo Pants</h3>
+<p class="description">Relaxed cargo pants inspired by shinobi street fashion.</p>
+<div class="rating">★★★★★</div>
+<div class="product-bottom">
+<span class="price">₹2,099</span>
+<button class="add" onclick="addCart('Leaf Cargo Pants')">ADD +</button>
+</div>
+</div>
+</article>
+
+<article class="product" data-anime="aot">
+<div class="product-image">
+<img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=800&q=85">
+<span class="tag">TRENDING</span>
+<button class="wish" onclick="wishlist(this)">♡</button>
+</div>
+<div class="product-info">
+<div class="brand">Titan Street</div>
+<h3>Wall Maria Oversized Tee</h3>
+<p class="description">Minimal dark streetwear design inspired by the walls and titan universe.</p>
+<div class="rating">★★★★★</div>
+<div class="product-bottom">
+<span class="price">₹1,449</span>
+<button class="add" onclick="addCart('Wall Maria Tee')">ADD +</button>
+</div>
+</div>
+</article>
+
+</div>
+</div>
 </section>
-
-
-<!-- ================= FEATURE ================= -->
 
 <section id="featured">
+<div class="container">
 
-    <div class="container">
+<div class="feature">
 
-        <div class="feature">
+<div class="feature-image"></div>
 
-            <div class="feature-image"></div>
+<div class="feature-content">
+<small>ANIMEVERSE EXCLUSIVE</small>
 
-            <div class="feature-content">
+<h2>
+YOUR CHARACTER.<br>
+<span class="gradient">YOUR FIT.</span>
+</h2>
 
-                <small>THE KOTA'S EDIT</small>
+<p>
+Mix anime characters, bold graphics and modern
+streetwear silhouettes. Build a look that feels
+straight out of your favorite anime world.
+</p>
 
-                <h2>
-                    BUILD A
-                    <span class="gradient">CLEAN SETUP.</span>
-                </h2>
+<a href="#products" class="btn primary">EXPLORE DROPS →</a>
+</div>
 
-                <p>
-                    Explore premium hookah equipment,
-                    glassware, storage and maintenance
-                    accessories selected for a modern
-                    lifestyle aesthetic.
-                </p>
-
-                <div>
-                    <a href="#accessories" class="btn btn-primary">
-                        Explore Gear
-                        <i class="fa-solid fa-arrow-right"></i>
-                    </a>
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
+</div>
+</div>
 </section>
 
+<section id="collections">
+<div class="container">
 
-<!-- ================= COLLECTION ================= -->
+<div class="section-title">
+<div>
+<h2>Shop By Style</h2>
+<p>Different fits for different anime moods.</p>
+</div>
+</div>
 
-<section>
+<div class="collection-grid">
 
-    <div class="container">
+<div class="collection">
+<div class="emoji">👕</div>
+<h3>Oversized Tees</h3>
+<p>
+Heavyweight streetwear T-shirts featuring
+anime-inspired graphics and character artwork.
+</p>
+</div>
 
-        <div class="section-heading">
+<div class="collection">
+<div class="emoji">👖</div>
+<h3>Anime Pants</h3>
+<p>
+Cargo pants, relaxed trousers and sportswear
+designed for an oversized anime aesthetic.
+</p>
+</div>
 
-            <div>
-                <h2>Everything For Your Setup</h2>
-                <p>Modern accessory categories in one place.</p>
-            </div>
+<div class="collection">
+<div class="emoji">🧥</div>
+<h3>Hoodies & Jackets</h3>
+<p>
+Layer your fit with bold anime-inspired
+hoodies, varsity jackets and outerwear.
+</p>
+</div>
 
-        </div>
-
-        <div class="collection-grid">
-
-            <div class="collection">
-
-                <i class="fa-solid fa-bong"></i>
-
-                <h3>Hookah Equipment</h3>
-
-                <p>
-                    Hookah hardware, bases, stems, hoses,
-                    bowls and compatible accessories.
-                </p>
-
-            </div>
-
-
-            <div class="collection">
-
-                <i class="fa-solid fa-layer-group"></i>
-
-                <h3>Rolling Accessories</h3>
-
-                <p>
-                    Trays, storage solutions, rolling tools
-                    and related accessory equipment.
-                </p>
-
-            </div>
-
-
-            <div class="collection">
-
-                <i class="fa-solid fa-screwdriver-wrench"></i>
-
-                <h3>Maintenance Gear</h3>
-
-                <p>
-                    Cleaning brushes, cases and equipment
-                    care accessories.
-                </p>
-
-            </div>
-
-        </div>
-
-    </div>
-
+</div>
+</div>
 </section>
 
-
-<!-- ================= NOTICE ================= -->
-
 <section>
+<div class="container">
 
-    <div class="container">
+<div class="newsletter">
 
-        <div class="notice">
+<h2>JOIN THE ANIME DROP</h2>
 
-            <i class="fa-solid fa-triangle-exclamation"></i>
+<p>
+Get notified when new anime-inspired collections arrive.
+</p>
 
-            <div>
-                <strong>Responsible-use notice:</strong>
-                This demo showcases smoking-related accessories
-                and equipment only. Regulated tobacco and nicotine
-                products are not included. Follow all applicable
-                local laws and age restrictions.
-            </div>
+<div class="email-box">
+<input type="email" placeholder="Enter your email">
+<button onclick="subscribe()">JOIN NOW</button>
+</div>
 
-        </div>
+</div>
 
-    </div>
-
+</div>
 </section>
 
 </main>
 
+<footer>
 
-<!-- ================= FOOTER ================= -->
+<div class="container">
 
-<footer id="about">
+<div class="footer-grid">
 
-    <div class="container">
+<div>
+<a href="#" class="logo">ANIME<span>VERSE</span> ✦</a>
+<p>
+Anime-inspired clothing and streetwear for fans
+who want to wear their favorite worlds.
+</p>
+</div>
 
-        <div class="footer-grid">
+<div>
+<h4>SHOP</h4>
+<a href="#products">T-Shirts</a><br>
+<a href="#products">Pants</a><br>
+<a href="#products">Hoodies</a><br>
+<a href="#products">Jackets</a>
+</div>
 
-            <div>
+<div>
+<h4>ANIME</h4>
+<a href="#anime">Naruto</a><br>
+<a href="#anime">Death Note</a><br>
+<a href="#anime">Attack on Titan</a><br>
+<a href="#anime">Haikyuu</a>
+</div>
 
-                <a href="#" class="logo">
+<div>
+<h4>HELP</h4>
+<a href="#">Shipping</a><br>
+<a href="#">Returns</a><br>
+<a href="#">Size Guide</a><br>
+<a href="#">Contact</a>
+</div>
 
-                    <div class="logo-icon">
-                        <i class="fa-solid fa-store"></i>
-                    </div>
+</div>
 
-                    Kota's
-                    <span class="logo-gradient">
-                        Smoking Shop
-                    </span>
+<div class="copyright">
+© 2026 AnimeVerse • Anime-inspired fashion demo
+</div>
 
-                </a>
-
-                <p style="margin-top:12px;max-width:320px;">
-                    A modern destination for hookah equipment,
-                    smoking accessories and lifestyle gear.
-                </p>
-
-                <div class="socials">
-
-                    <a href="#">
-                        <i class="fa-brands fa-instagram"></i>
-                    </a>
-
-                    <a href="#">
-                        <i class="fa-brands fa-x-twitter"></i>
-                    </a>
-
-                    <a href="#">
-                        <i class="fa-brands fa-facebook-f"></i>
-                    </a>
-
-                </div>
-
-            </div>
-
-
-            <div>
-
-                <h4>SHOP</h4>
-
-                <a href="#categories">Collections</a><br>
-                <a href="#accessories">Accessories</a><br>
-                <a href="#featured">Featured</a>
-
-            </div>
-
-
-            <div>
-
-                <h4>SUPPORT</h4>
-
-                <a href="#">Help Center</a><br>
-                <a href="#">Shipping</a><br>
-                <a href="#">Returns</a>
-
-            </div>
-
-
-            <div>
-
-                <h4>LEGAL</h4>
-
-                <a href="#">Privacy</a><br>
-                <a href="#">Terms</a><br>
-                <a href="#">Responsible Use</a>
-
-            </div>
-
-        </div>
-
-
-        <div class="copyright">
-            © 2026 Kota's Smoking Shop • Accessories & lifestyle equipment
-        </div>
-
-    </div>
+</div>
 
 </footer>
 
+<div class="cart" id="cart">
+🛒 CART <span id="cartCount">0</span>
+</div>
 
 <script>
 
-/* ================= WISHLIST ================= */
+let cartCount = 0;
 
-document.querySelectorAll(".heart").forEach(button => {
+/* CART */
 
-    button.addEventListener("click",function(){
+function addCart(product){
 
-        const icon = this.querySelector("i");
+    cartCount++;
 
-        icon.classList.toggle("fa-regular");
-        icon.classList.toggle("fa-solid");
+    document.getElementById("cartCount").textContent = cartCount;
 
-        if(icon.classList.contains("fa-solid")){
+    alert(product + " added to cart!");
 
-            this.style.background =
-                "linear-gradient(135deg,#ff2d95,#8b5cf6)";
+}
+
+
+/* WISHLIST */
+
+function wishlist(button){
+
+    if(button.textContent === "♡"){
+
+        button.textContent = "♥";
+
+        button.style.background =
+        "linear-gradient(135deg,#ff2f92,#8b5cf6)";
+
+    }else{
+
+        button.textContent = "♡";
+
+        button.style.background = "";
+
+    }
+
+}
+
+
+/* FILTER */
+
+function filterProducts(category){
+
+    const products =
+    document.querySelectorAll(".product");
+
+    products.forEach(product => {
+
+        if(category === "all"){
+
+            product.style.display = "";
 
         }else{
 
-            this.style.background = "";
+            product.style.display =
+            product.dataset.anime === category
+            ? ""
+            : "none";
 
         }
+
+    });
+
+    document.querySelectorAll(".filter")
+    .forEach(btn => btn.classList.remove("active"));
+
+    event.target.classList.add("active");
+
+}
+
+
+/* NEWSLETTER */
+
+function subscribe(){
+
+    const input =
+    document.querySelector(".email-box input");
+
+    if(input.value.trim() === ""){
+
+        alert("Please enter your email.");
+
+        return;
+
+    }
+
+    alert("Welcome to AnimeVerse! ✨");
+
+    input.value = "";
+
+}
+
+
+/* SEARCH */
+
+document.querySelector(".actions .icon")
+.addEventListener("click",function(){
+
+    const search =
+    prompt("Search anime clothing:");
+
+    if(!search) return;
+
+    const query =
+    search.toLowerCase();
+
+    document.querySelectorAll(".product")
+    .forEach(product => {
+
+        const text =
+        product.innerText.toLowerCase();
+
+        product.style.display =
+        text.includes(query)
+        ? ""
+        : "none";
+
+    });
+
+    document
+    .getElementById("products")
+    .scrollIntoView({
+        behavior:"smooth"
+    });
+
+});
+
+
+/* NAVIGATION */
+
+document.querySelectorAll("nav a")
+.forEach(link => {
+
+    link.addEventListener("click",function(){
+
+        document
+        .querySelectorAll("nav a")
+        .forEach(item =>
+            item.classList.remove("active")
+        );
+
+        this.classList.add("active");
 
     });
 
 });
 
 
-/* ================= SEARCH ================= */
+/* MOBILE ACTION */
 
-document.getElementById("searchBtn").addEventListener("click",function(){
+document.querySelectorAll(".actions .icon")[2]
+.addEventListener("click",function(){
 
-    const query = prompt("Search accessories:");
-
-    if(query && query.trim()){
-
-        const value = query.toLowerCase().trim();
-
-        document.querySelectorAll(".product").forEach(product => {
-
-            const text = product.innerText.toLowerCase();
-
-            product.style.display =
-                text.includes(value) ? "" : "none";
-
-        });
-
-        document
-            .getElementById("accessories")
-            .scrollIntoView({
-                behavior:"smooth"
-            });
-
-    }
-
-});
-
-
-/* ================= MOBILE MENU ================= */
-
-const menuBtn = document.getElementById("menuBtn");
-const nav = document.querySelector("nav");
-
-menuBtn.addEventListener("click",function(){
+    const nav =
+    document.querySelector("nav");
 
     if(nav.style.display === "flex"){
 
@@ -1437,55 +1367,18 @@ menuBtn.addEventListener("click",function(){
 
         nav.style.display = "flex";
         nav.style.position = "absolute";
-        nav.style.top = "66px";
-        nav.style.left = "12px";
-        nav.style.right = "12px";
+        nav.style.top = "76px";
+        nav.style.left = "4%";
+        nav.style.right = "4%";
         nav.style.flexDirection = "column";
-        nav.style.padding = "12px";
-        nav.style.borderRadius = "18px";
-        nav.style.background = "rgba(14,14,23,.98)";
+        nav.style.padding = "15px";
+        nav.style.background = "#111124";
         nav.style.border = "1px solid rgba(255,255,255,.1)";
+        nav.style.borderRadius = "18px";
 
     }
 
 });
-
-
-/* ================= VIEW BUTTONS ================= */
-
-document.querySelectorAll(".view-btn").forEach(button => {
-
-    button.addEventListener("click",function(){
-
-        const product =
-            this.closest(".product").querySelector("h3").textContent;
-
-        alert(
-            product +
-            "\n\nProduct details interface ready."
-        );
-
-    });
-
-});
-
-
-/* ================= NAVIGATION ================= */
-
-document.querySelectorAll("nav a").forEach(link => {
-
-    link.addEventListener("click",function(){
-
-        document
-            .querySelectorAll("nav a")
-            .forEach(item => item.classList.remove("active"));
-
-        this.classList.add("active");
-
-    });
-
-});
-
 
 </script>
 
